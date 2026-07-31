@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { getXPReward } from '@/utils/levelSystem';
-import { useXPNotification } from '@/contexts/XPNotificationContext';
-import LevelUpModal from '@/components/gamification/LevelUpModal';
 
 interface UserProgression {
   total_xp: number;
@@ -19,30 +15,28 @@ interface UserProgression {
   streak_multiplier: number;
 }
 
-interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  xp_reward: number;
-}
-
+/**
+ * Read-only gamification hook.
+ *
+ * 2026-07-30 (overhaul WS 1.1, plan 05 §6.2 release 1): the legacy
+ * client-driven award paths were removed. The `award-xp` and `check-streak`
+ * edge functions are now 410 Gone stubs — XP and streaks are written
+ * exclusively server-side by `submit-exercise` / `vocab-review` through
+ * `_shared/learnerProgress.ts` (System A: `xp_events` + `learner_streaks`).
+ * This hook keeps its previous return shape so existing consumers compile
+ * and render unchanged; only the write paths are gone.
+ */
 export const useGamification = () => {
   const [progression, setProgression] = useState<UserProgression | null>(null);
   const [loading, setLoading] = useState(true);
+  // Level-up celebration state is retained for interface compatibility.
+  // It can no longer trigger from this hook: levels change only through
+  // server-side awards, which the client observes via fetchProgression().
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
-  const [levelUpData, setLevelUpData] = useState<{ oldLevel: number; newLevel: number } | null>(null);
-  const { toast } = useToast();
-  const { triggerXPNotification } = useXPNotification();
+  const [levelUpData] = useState<{ oldLevel: number; newLevel: number } | null>(null);
 
   useEffect(() => {
-    const initializeProgression = async () => {
-      await fetchProgression();
-      // Only check streak after progression is loaded and user is confirmed
-      await checkStreak();
-    };
-    
-    initializeProgression();
+    fetchProgression();
   }, []);
 
   const fetchProgression = async () => {
@@ -77,45 +71,25 @@ export const useGamification = () => {
     }
   };
 
-  const checkStreak = async () => {
-    try {
-      // Get current session to ensure auth token is available
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log('No active session, skipping streak check');
-        return;
-      }
-
-      const { data, error } = await supabase.functions.invoke('check-streak', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-      
-      if (error) {
-        console.error('Streak check error:', error);
-        throw error;
-      }
-
-      if (data.streak_bonus_xp > 0) {
-        toast({
-          title: `🔥 ${data.current_streak} Day Streak!`,
-          description: `+${data.streak_bonus_xp} bonus XP for maintaining your streak!`,
-        });
-        fetchProgression();
-      }
-    } catch (error) {
-      console.error('Error checking streak:', error);
-    }
-  };
-
+  /**
+   * NO-OP since 2026-07-30 (plan 05 §6.2 release 1, wip-01a F6.1).
+   *
+   * This used to invoke the `award-xp` edge function with client-computed
+   * XP values — an exploitable path (unbounded, client-trusted metadata)
+   * that has been retired to a 410 stub. XP is now awarded only
+   * server-side after verified work; conversational/voice XP is paused
+   * until the mission runtime emits server-corroborated awards.
+   *
+   * The signature and `null` return are preserved so existing call sites
+   * (which already handled the `null` error path) keep working unchanged.
+   */
   const awardXP = async (
-    activityType: 'lesson' | 'certification' | 'voice' | 'streak' | 'quest' | 
-                  'text_message' | 'voice_message' | 'pronunciation' | 
-                  'conversation_analysis' | 'exam_analysis' | 'premium_voice' | 'realtime_ai',
-    metadata?: { 
-      score?: number; 
-      difficulty?: string; 
+    _activityType: 'lesson' | 'certification' | 'voice' | 'streak' | 'quest' |
+                   'text_message' | 'voice_message' | 'pronunciation' |
+                   'conversation_analysis' | 'exam_analysis' | 'premium_voice' | 'realtime_ai',
+    _metadata?: {
+      score?: number;
+      difficulty?: string;
       minutes?: number;
       complexity?: number;
       grammarAccuracy?: number;
@@ -129,55 +103,9 @@ export const useGamification = () => {
         listening: number;
       };
     }
-  ) => {
-    try {
-      console.log('🎮 awardXP called:', { activityType, metadata });
-      const xpAmount = getXPReward(activityType, metadata);
-      console.log('🎮 Calculated XP amount:', xpAmount);
-
-      const { data, error } = await supabase.functions.invoke('award-xp', {
-        body: {
-          xp_amount: xpAmount,
-          source: activityType,
-          metadata,
-        },
-      });
-
-      if (error) throw error;
-
-      console.log('🎮 XP awarded successfully:', data);
-
-      // Trigger XP notification through context
-      if (data.xp_awarded) {
-        triggerXPNotification(data.xp_awarded);
-      }
-
-      // Show level up modal if leveled up
-      if (data.leveled_up) {
-        console.log('🎮 Level up!', { oldLevel: data.old_level, newLevel: data.new_level });
-        setLevelUpData({ oldLevel: data.old_level, newLevel: data.new_level });
-        setShowLevelUpModal(true);
-      }
-
-      // Show achievement unlocks
-      if (data.new_achievements?.length > 0) {
-        data.new_achievements.forEach((achievement: Achievement) => {
-          toast({
-            title: `🏆 Achievement Unlocked!`,
-            description: `${achievement.icon} ${achievement.name} (+${achievement.xp_reward} XP)`,
-            duration: 5000,
-          });
-        });
-      }
-
-      // Refresh progression
-      await fetchProgression();
-
-      return data;
-    } catch (error) {
-      console.error('❌ Error awarding XP:', error);
-      return null;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> => {
+    return null;
   };
 
   return {

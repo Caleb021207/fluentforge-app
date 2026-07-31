@@ -1,42 +1,24 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildCorsHeaders } from "../_shared/cors.ts";
 
-
-serve(async (req) => {
+/**
+ * RETIRED 2026-07-30 — 410 Gone stub (overhaul WS 1.1; plan 15 §R4,
+ * wip-01a F9.1/F9.2).
+ *
+ * Orphan re-verified 2026-07-30: zero invocations anywhere in src/. The old
+ * implementation was an unauthenticated endpoint (no config.toml entry, no
+ * in-body auth) that disclosed runtime memory stats and whether the paid AI
+ * gateway key was configured — low-value information, but public attack
+ * surface with no consumer.
+ *
+ * Kept as a stub instead of deleted so rollback is a `git revert`.
+ * This stub performs ZERO reads or writes.
+ */
+Deno.serve((req) => {
   const corsHeaders = buildCorsHeaders(req);
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
-
-  try {
-    const startTime = Date.now();
-    const memoryUsage = Deno.memoryUsage();
-
-    // Check Lovable AI connectivity
-    let aiStatus = "unknown";
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      aiStatus = "missing_key";
-    } else {
-      aiStatus = "configured";
-    }
-
-    return new Response(JSON.stringify({
-      status: "ok",
-      timestamp: new Date().toISOString(),
-      responseTime: `${Date.now() - startTime}ms`,
-      memory: {
-        rss: `${Math.round(memoryUsage.rss / 1024 / 1024)} MB`,
-        heapUsed: `${Math.round(memoryUsage.heapUsed / 1024 / 1024)} MB`,
-      },
-      dependencies: { ai: aiStatus },
-      version: "2.0.0"
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ status: "error", error: String(error) }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
-  }
+  return new Response(
+    JSON.stringify({ error: "gone", message: "health-check has been retired." }),
+    { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
 });

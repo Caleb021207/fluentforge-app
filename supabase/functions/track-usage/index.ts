@@ -1,14 +1,36 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import { requireUser } from "../_shared/authGuard.ts";
+import {
+  clampMessageCount,
+  clampSessionMinutes,
+  isVoiceSessionType,
+  normalizeSessionId,
+  normalizeSessionType,
+} from "../_shared/usageBounds.ts";
 
 /**
  * Server-side writer for usage/quota data.
  * `usage_tracking`, `api_calls_tracking` and `student_usage_limits` are no longer
  * client-writable — otherwise a student could raise their own monthly quota.
+ *
+ * Hardened 2026-07-30 (overhaul WS 1.1; wip-11a D8):
+ * - identity always comes from the verified JWT (`requireUser`), never the body;
+ * - client-reported durations are clamped to per-session-type plausibility caps
+ *   (`_shared/usageBounds.ts`) instead of a flat 240-minute ceiling;
+ * - a repeated `session_id` for the same student is deduplicated instead of
+ *   double-billed (the premium-voice client has a multi-tier reporting fallback
+ *   that could previously record the same session twice);
+ * - only voice-type sessions consume the monthly voice-minute quota (previously
+ *   text sessions also called `increment_voice_usage`).
+ *
+ * Residual (Phase 2 ledger design, wip-11a D8): duration is still client-
+ * *reported*, only server-*bounded*. Full server measurement needs a
+ * server-issued session-open row at start (e.g. the premium-voice mint's
+ * `session_start`) and a server-stamped close so minutes derive from server
+ * clocks; `usage_tracking` today only gains its row at session end, so there
+ * is no earlier server timestamp to cross-check against.
  */
-
-const SESSION_TYPES = ["text_practice", "voice_practice", "premium_voice_practice", "pronunciation", "lesson"];
 
 Deno.serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req);
@@ -37,23 +59,37 @@ Deno.serve(async (req) => {
     await supabase.rpc("initialize_student_usage_limits", { target_student_id: userId });
 
     if (action === "session") {
-      const sessionType = SESSION_TYPES.includes(body.session_type) ? body.session_type : "text_practice";
-      const minutes = Math.min(240, Math.max(0, Number(body.minutes_used) || 0));
-      const messages = Math.min(1000, Math.max(0, Number(body.messages_count) || 0));
+      const sessionType = normalizeSessionType(body.session_type);
+      const minutes = clampSessionMinutes(sessionType, body.minutes_used);
+      const messages = clampMessageCount(body.messages_count);
+      const sessionId = normalizeSessionId(body.session_id);
+
+      // Replay/double-report guard: one usage row per (student, session).
+      if (sessionId) {
+        const { data: existing, error: existingError } = await supabase
+          .from("usage_tracking")
+          .select("id")
+          .eq("student_id", userId)
+          .eq("session_id", sessionId)
+          .limit(1);
+        if (existingError) throw existingError;
+        if (existing && existing.length > 0) {
+          return json({ success: true, deduplicated: true });
+        }
+      }
 
       const { error } = await supabase.from("usage_tracking").insert({
         student_id: userId,
         session_type: sessionType,
-        session_id: typeof body.session_id === "string" ? body.session_id.slice(0, 120) : null,
+        session_id: sessionId,
         minutes_used: minutes,
         messages_count: messages,
         ended_at: body.ended ? new Date().toISOString() : null,
       });
       if (error) throw error;
 
-      if (minutes > 0) {
-        const rpc = sessionType === "premium_voice_practice" ? "increment_voice_usage" : "increment_voice_usage";
-        await supabase.rpc(rpc, { p_user_id: userId, p_minutes: minutes });
+      if (minutes > 0 && isVoiceSessionType(sessionType)) {
+        await supabase.rpc("increment_voice_usage", { p_user_id: userId, p_minutes: minutes });
       }
       return json({ success: true });
     }

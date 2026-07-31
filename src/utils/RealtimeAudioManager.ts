@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { resolveRealtimeModel } from "@/utils/realtimeModel";
 
 export class AudioRecorder {
   private stream: MediaStream | null = null;
@@ -198,26 +199,19 @@ export class RealtimeChat {
         throw new Error('Not authenticated');
       }
 
-      const endpoint = 'premium-voice-realtime';
-
-      const response = await fetch(
-        `https://dukpljcweixxmpkiblwo.functions.supabase.co/${endpoint}`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          }
-        }
+      // D2 fix (wip-11a, 2026-07-30): mint the token through the app's own
+      // configured Supabase client instead of a hardcoded foreign project URL
+      // (this previously pointed at dukpljcweixxmpkiblwo, not this project).
+      // functions.invoke targets VITE_SUPABASE_URL and attaches the user JWT.
+      const { data, error: invokeError } = await supabase.functions.invoke(
+        'premium-voice-realtime',
+        { body: {} }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to get token');
+      if (invokeError) {
+        throw new Error(invokeError.message || 'Failed to get token');
       }
 
-      const data = await response.json();
-      
       if (!data?.client_secret?.value) {
         throw new Error("No token received");
       }
@@ -267,9 +261,14 @@ export class RealtimeChat {
       const offer = await this.pc.createOffer();
       await this.pc.setLocalDescription(offer);
 
-      // Exchange SDP with OpenAI
+      // Exchange SDP with OpenAI.
+      // D3 fix (wip-11a, 2026-07-30): the SDP exchange previously pinned
+      // gpt-4o-realtime-preview-2024-12-17 while the mint pinned
+      // gpt-realtime-2025-08-28. The minted session's model is authoritative;
+      // the shared constant in realtimeModel.ts is the fallback.
+      const model = resolveRealtimeModel(data.model);
       const sdpResponse = await fetch(
-        `https://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`,
+        `https://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`,
         {
           method: "POST",
           body: offer.sdp,

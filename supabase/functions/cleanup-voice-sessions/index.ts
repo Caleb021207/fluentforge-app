@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 import { buildCorsHeaders } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/authGuard.ts";
 
 /**
  * Closes voice sessions that were never ended by the client (tab closed, crash…).
@@ -8,6 +9,15 @@ import { buildCorsHeaders } from "../_shared/cors.ts";
  * Previously this pointed at a `premium_voice_chat_sessions` table that does not
  * exist, so it silently did nothing. It now operates on `usage_tracking`, which is
  * where voice sessions are actually recorded.
+ *
+ * 2026-07-30 (overhaul WS 1.1; plan 15 §R4): added `requireUser` — this function
+ * had NO in-body auth and no config.toml entry, so any holder of the public anon
+ * key could trigger a service-role sweep. It is invoked from the client
+ * (`src/utils/voiceChatUtils.ts`) via `functions.invoke`, which attaches the
+ * user JWT, so requiring a verified user is non-breaking. The sweep itself is
+ * idempotent maintenance (caps billing at MAX_BILLABLE_MINUTES, only touches
+ * rows already abandoned >15 min), so authenticated-user access is acceptable
+ * until it moves to a scheduled service-role job (Phase 2).
  */
 
 const VOICE_SESSION_TYPES = ['voice_practice', 'premium_voice_practice'];
@@ -17,6 +27,9 @@ const MAX_BILLABLE_MINUTES = 10;
 serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req);
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+
+  const gate = await requireUser(req, corsHeaders);
+  if (gate.error) return gate.error;
 
   try {
     const supabase = createClient(

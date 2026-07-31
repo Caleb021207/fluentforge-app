@@ -1,110 +1,26 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { buildCorsHeaders } from "../_shared/cors.ts";
 
-
-interface VerificationResponse {
-  valid: boolean
-  message: string
-  remaining_uses?: number
-  expires_at?: string
-}
-
-Deno.serve(async (req) => {
+/**
+ * RETIRED 2026-07-30 — 410 Gone stub (overhaul WS 1.1; plan 15 §R4,
+ * wip-01a F5.6/F9.1/F9.2).
+ *
+ * Orphan re-verified 2026-07-30: zero invocations anywhere in src/. The old
+ * implementation was an unauthenticated, unrate-limited validity oracle over
+ * `access_codes` (queried with the service role) — usable to brute-force live
+ * district access codes.
+ *
+ * Access-code redemption flows exclusively through the server-side
+ * `process_access_code` RPC; no standalone verification endpoint exists.
+ *
+ * Kept as a stub instead of deleted so rollback is a `git revert`.
+ * This stub performs ZERO reads or writes.
+ */
+Deno.serve((req) => {
   const corsHeaders = buildCorsHeaders(req);
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
-  }
-
-  try {
-    const { code } = await req.json()
-
-    if (!code) {
-      return new Response(
-        JSON.stringify({ valid: false, message: 'Code is required' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400 
-        }
-      )
-    }
-
-    // Initialize Supabase client
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
-
-    // Check if code exists and is valid
-    const { data: codeRecord, error } = await supabase
-      .from('access_codes')
-      .select('*')
-      .eq('code', code.trim().toUpperCase())
-      .eq('active', true)
-      .single()
-
-    if (error || !codeRecord) {
-      return new Response(
-        JSON.stringify({ valid: false, message: 'Invalid or inactive code' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      )
-    }
-
-    // Check if code has expired
-    if (codeRecord.expires_at && new Date(codeRecord.expires_at) < new Date()) {
-      return new Response(
-        JSON.stringify({ valid: false, message: 'Code has expired' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      )
-    }
-
-    // Check if code has remaining uses
-    if (codeRecord.max_uses && codeRecord.current_uses >= codeRecord.max_uses) {
-      return new Response(
-        JSON.stringify({ valid: false, message: 'Code has no remaining uses' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      )
-    }
-
-    // Calculate remaining uses
-    const remainingUses = codeRecord.max_uses 
-      ? codeRecord.max_uses - codeRecord.current_uses 
-      : null
-
-    const response: VerificationResponse = {
-      valid: true,
-      message: 'Code is valid',
-      remaining_uses: remainingUses ?? undefined,
-      expires_at: codeRecord.expires_at
-    }
-
-    return new Response(
-      JSON.stringify(response),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
-      }
-    )
-
-  } catch (error) {
-    console.error('Error verifying code:', error)
-    return new Response(
-      JSON.stringify({ valid: false, message: 'Server error' }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
-      }
-    )
-  }
-})
+  return new Response(
+    JSON.stringify({ error: "gone", message: "verify-certification-code has been retired." }),
+    { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
+});

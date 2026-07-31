@@ -1,23 +1,24 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildCorsHeaders } from "../_shared/cors.ts";
-import { guardPaidRequest } from "../_shared/authGuard.ts";
 
-
-serve(async (req) => {
+/**
+ * RETIRED 2026-07-30 — 410 Gone stub (overhaul WS 1.1; plan 15 §R4,
+ * wip-01a F9.1).
+ *
+ * Orphan re-verified 2026-07-30: zero invocations anywhere in src/. This was
+ * already a "feature removed" stub (its `student_learning_profiles` dependency
+ * was dropped), but it still consumed a unit of the caller's daily paid-request
+ * quota on every hit. Personalized review is served by the FSRS deck
+ * (`vocab-review`) instead.
+ *
+ * Kept as a stub instead of deleted so rollback is a `git revert`.
+ * This stub performs ZERO reads, writes, or quota consumption.
+ */
+Deno.serve((req) => {
   const corsHeaders = buildCorsHeaders(req);
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
-  const gate = await guardPaidRequest(req, corsHeaders, 'generate-personalized-flashcards', 50);
-  if (gate.error) return gate.error;
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  // This function previously depended on student_learning_profiles which has been removed.
-  // Returning a message indicating the feature is no longer available.
   return new Response(
-    JSON.stringify({ success: false, message: 'Personalized flashcard generation based on profiling has been removed.' }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    JSON.stringify({ error: "gone", message: "generate-personalized-flashcards has been retired. Use vocab-review." }),
+    { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 });

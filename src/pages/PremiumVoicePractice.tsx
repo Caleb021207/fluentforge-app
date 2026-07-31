@@ -37,7 +37,7 @@ const PremiumVoicePractice = () => {
   const customTimerRef = useRef<number | null>(null);
   
   const { premiumVoiceMinutesRemaining, checkCanStartPremiumVoiceSession, trackPremiumVoiceSession } = useUsageLimits();
-  const { awardXP, showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
+  const { showLevelUpModal, setShowLevelUpModal, levelUpData, progression } = useGamification();
   const sessionStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -200,10 +200,9 @@ const PremiumVoicePractice = () => {
     const minutesUsed = Math.ceil(customElapsedSeconds / 60);
     console.log('Ending custom realtime session:', { customElapsedSeconds, minutesUsed, customSessionId });
 
-    // Award XP for custom realtime session
-    if (minutesUsed > 0 && customMessages.length > 0) {
-      await awardXP('realtime_ai');
-    }
+    // 2026-07-30: client-side XP award removed (plan 05 §6.2 release 1).
+    // Voice XP returns only via server-corroborated awards from the mission
+    // runtime; the legacy award-xp endpoint is a 410 stub.
 
     if (customChatRef.current && minutesUsed > 0 && customSessionId) {
       try {
@@ -240,11 +239,9 @@ const PremiumVoicePractice = () => {
     const minutesUsed = Math.ceil(elapsedSeconds / 60);
     console.log('Ending premium voice conversation:', { elapsedSeconds, minutesUsed, sessionId });
     
-    // Award XP for completing voice session
-    if (minutesUsed > 0) {
-      await awardXP('premium_voice');
-    }
-    
+    // 2026-07-30: client-side XP award removed (plan 05 §6.2 release 1).
+    // The legacy award-xp endpoint is a 410 stub; XP is server-authoritative.
+
     // Track usage with fallback mechanisms
     if (chatRef.current && minutesUsed > 0 && sessionId) {
       // Primary: Client-side tracking

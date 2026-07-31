@@ -1,165 +1,35 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { buildCorsHeaders } from "../_shared/cors.ts";
 
-
-const getUserIdFromAuthHeader = (authHeader: string) => {
-  const jwt = authHeader.replace('Bearer ', '').trim();
-  const parts = jwt.split('.');
-
-  if (parts.length !== 3) {
-    throw new Error('Invalid JWT format');
-  }
-
-  const payload = JSON.parse(atob(parts[1]));
-  const userId = payload.sub;
-
-  if (!userId) {
-    throw new Error('No sub claim in JWT');
-  }
-
-  return userId as string;
-};
-
-serve(async (req) => {
+/**
+ * RETIRED 2026-07-30 — 410 Gone stub (overhaul WS 1.1; plan 05 §6.2 release 1,
+ * plan 15 §R4, wip-01a F6.2).
+ *
+ * This was the legacy streak path. It parsed the JWT WITHOUT verifying the
+ * signature (base64-decoded `sub` and trusted it), had no config.toml entry,
+ * and wrote `user_progression` streak fields + up to 100 bonus XP/day from an
+ * unauthenticated-in-body endpoint.
+ *
+ * Server-authoritative replacement (System A): `learner_streaks` is the single
+ * canonical streak, advanced ONLY by `_shared/learnerProgress.ts#touchStreak`
+ * when XP-earning work actually happened (submit-exercise / vocab-review).
+ * `user_progression.current_streak_days` is frozen for audit and no longer
+ * written (plan 05 §6.2 step 4).
+ *
+ * Kept as a stub instead of deleted so rollback is a `git revert`. NOTE:
+ * redeploying the old implementation is a security regression and requires
+ * owner sign-off (plan 05 §6.2). This stub performs ZERO reads or writes.
+ */
+Deno.serve((req) => {
   const corsHeaders = buildCorsHeaders(req);
-  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  try {
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'No authorization header' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    const userId = getUserIdFromAuthHeader(authHeader);
-    const today = new Date().toISOString().split('T')[0];
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
-    );
-
-    const { data: progression, error: progressionError } = await supabase
-      .from('user_progression')
-      .select('user_id, total_xp, current_streak, longest_streak, last_activity_date')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (progressionError) {
-      throw progressionError;
-    }
-
-    if (!progression) {
-      const { error: createError } = await supabase
-        .from('user_progression')
-        .insert({
-          user_id: userId,
-          last_activity_date: today,
-          current_streak: 1,
-          longest_streak: 1,
-        });
-
-      if (createError) {
-        throw createError;
-      }
-
-      return new Response(
-        JSON.stringify({
-          success: true,
-          current_streak: 1,
-          longest_streak: 1,
-          streak_bonus_xp: 25,
-          streak_continued: true,
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    if (progression.last_activity_date === today) {
-      return new Response(
-        JSON.stringify({
-          success: true,
-          current_streak: progression.current_streak ?? 0,
-          longest_streak: progression.longest_streak ?? 0,
-          streak_bonus_xp: 0,
-          streak_continued: false,
-          already_active_today: true,
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-    const currentStreak = progression.current_streak ?? 0;
-    const savedLongestStreak = progression.longest_streak ?? 0;
-
-    let newStreak = 1;
-    let streakContinued = false;
-    let streakBonusXP = 0;
-
-    if (progression.last_activity_date === yesterdayStr) {
-      newStreak = currentStreak + 1;
-      streakContinued = true;
-      streakBonusXP = Math.min(25 + Math.floor(newStreak / 7) * 10, 100);
-    }
-
-    const longestStreak = Math.max(newStreak, savedLongestStreak);
-
-    const { error: updateError } = await supabase
-      .from('user_progression')
-      .update({
-        last_activity_date: today,
-        current_streak: newStreak,
-        longest_streak: longestStreak,
-        total_xp: (progression.total_xp ?? 0) + streakBonusXP,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
-
-    if (updateError) {
-      throw updateError;
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        current_streak: newStreak,
-        longest_streak: longestStreak,
-        streak_continued: streakContinued,
-        streak_bonus_xp: streakBonusXP,
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
-  } catch (error) {
-    console.error('Error in check-streak:', error);
-
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
-  }
+  return new Response(
+    JSON.stringify({
+      error: "gone",
+      message:
+        "check-streak has been retired. Streaks are now maintained server-side in learner_streaks, " +
+        "advanced only when verified work is completed; clients can no longer trigger streak writes.",
+    }),
+    { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  );
 });
