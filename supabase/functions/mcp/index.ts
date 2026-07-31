@@ -123,7 +123,7 @@ var get_my_progress_default = defineTool2({
 
 // src/lib/mcp/tools/list-curriculum.ts
 import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.26.1";
-import { z } from "npm:zod@^3.23.8";
+import { z } from "npm:zod@^4.4.3";
 var list_curriculum_default = defineTool3({
   name: "list_curriculum",
   title: "List curriculum courses and units",
@@ -155,7 +155,7 @@ var list_curriculum_default = defineTool3({
 
 // src/lib/mcp/tools/list-due-reviews.ts
 import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.26.1";
-import { z as z2 } from "npm:zod@^3.23.8";
+import { z as z2 } from "npm:zod@^4.4.3";
 var list_due_reviews_default = defineTool4({
   name: "list_due_reviews",
   title: "List due vocabulary reviews",
@@ -178,7 +178,7 @@ var list_due_reviews_default = defineTool4({
 
 // src/lib/mcp/tools/list-my-assignments.ts
 import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.26.1";
-import { z as z3 } from "npm:zod@^3.23.8";
+import { z as z3 } from "npm:zod@^4.4.3";
 var list_my_assignments_default = defineTool5({
   name: "list_my_assignments",
   title: "List my class assignments",
@@ -204,7 +204,7 @@ var list_my_assignments_default = defineTool5({
 
 // src/lib/mcp/tools/search-vocabulary.ts
 import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@0.26.1";
-import { z as z4 } from "npm:zod@^3.23.8";
+import { z as z4 } from "npm:zod@^4.4.3";
 var search_vocabulary_default = defineTool6({
   name: "search_vocabulary",
   title: "Search curriculum vocabulary",
