@@ -116,3 +116,26 @@ just on paper.
   touched functions · DB harness 17/17 + 11/11.
 - **Only remaining wall:** production apply/deploy needs the hosted Supabase credentials (owner).
   Everything short of that is done and proven.
+
+### E8 · 2026-07-30 · PHASE 2 — learning engine, exercise waves, quota, pipeline
+- **2.1 grading engine** (graders.ts + submit-exercise): ends MCQ-only — 6 Wave-1 primitives,
+  server-only exercise_answer_keys (answerKeys.behavior 12/12 proves keys never client-readable),
+  legacy MCQ byte-compatible. 41 grader vectors.
+- **2.2 memory model** (20260731020000): learner_memory_items (9 kinds + proficiency ladder,
+  FSRS-5), mapping view for dual-write diff; memoryModel.behavior 14/14.
+- **2.3 pooled voice** (20260731030000 + voicePool.ts): $60-plan quota — 1000 min/seat pool,
+  400 realtime protected, degrade-not-bill; voicePool.behavior 25/25; usage schema drift
+  reconciled (wip-2.3).
+- **2.4 content pipeline**: extended gauntlet gates (deterministic) + AI-gate declarations.
+- **Combined verify:** vitest 377 · tsc 0 · build green · deno check all touched fns · migration
+  chain 20/20 · 62 behavioral assertions on real Postgres (security 11 + answerKeys 12 +
+  voicePool 25 + memoryModel 14).
+- **Prepared, not applied:** 3 new migrations validated locally; wiring to live behavior waits on
+  production apply (owner: hosted Supabase credentials) so nothing regresses against the live DB.
+
+### E9 · 2026-07-30 · GitHub backup
+- origin/main was stale at 34db6fdf (old Lovable commit) — none of the July overhaul, planning
+  package, or Phase 0/1/2 work had ever been pushed. Pushed branches exec/overhaul (all 40+
+  commits) and overhaul (baseline) to origin. main untouched. Merging exec/overhaul -> main is
+  the potential production-deploy trigger (Lovable/Supabase pipeline) — held for explicit owner
+  decision.
