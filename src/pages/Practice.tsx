@@ -280,7 +280,9 @@ const Practice = () => {
           <PracticeHeader targetLanguage={targetLanguage} />
         </motion.div>
         
-        {/* Scenario selection — the hero moment of the page. */}
+        {/* Scenario selection is the front door: until a conversation is
+            chosen, the picker IS the page. The chat only exists once a
+            scenario (including "Just talk") has been picked. */}
         <div className="mb-6">
           {selectedScenario ? (
             <ScenarioChip
@@ -292,6 +294,8 @@ const Practice = () => {
           )}
         </div>
 
+        {selectedScenario && (
+        <>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -409,6 +413,8 @@ const Practice = () => {
         >
          <PracticeGuide targetLanguage={targetLanguage} />
         </motion.div>
+        </>
+        )}
       </div>
     </div>
     </>

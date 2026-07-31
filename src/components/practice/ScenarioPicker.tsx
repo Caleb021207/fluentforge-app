@@ -5,6 +5,7 @@ import {
   type ConversationScenario,
   type ScenarioLevel,
 } from "@/data/conversationScenarios";
+import { getScenarioIcon } from "./scenarioIcons";
 
 interface ScenarioPickerProps {
   onSelect: (id: string) => void;
@@ -117,7 +118,9 @@ interface CardProps {
 }
 
 /** Full-width hero treatment for featured scenarios ("Just talk"). */
-const FeaturedScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
+const FeaturedScenarioCard = ({ scenario, onSelect, variants }: CardProps) => {
+  const Icon = getScenarioIcon(scenario.id);
+  return (
   <motion.button
     type="button"
     variants={variants}
@@ -127,9 +130,9 @@ const FeaturedScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
     <div className="flex items-center gap-4 sm:gap-5">
       <span
         aria-hidden
-        className="flex h-14 w-14 shrink-0 select-none items-center justify-center rounded-2xl bg-brand-soft text-3xl transition-transform duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-4xl"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-soft transition-transform duration-300 group-hover:scale-110 sm:h-16 sm:w-16"
       >
-        {scenario.emoji}
+        <Icon className="h-7 w-7 text-accent sm:h-8 sm:w-8" />
       </span>
       <span className="min-w-0">
         <span className="block text-lg font-bold leading-tight tracking-tight sm:text-xl">
@@ -144,10 +147,13 @@ const FeaturedScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
       </span>
     </div>
   </motion.button>
-);
+  );
+};
 
-/** Compact adventure card: emoji tile, title, goal. Level comes from the group. */
-const ScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
+/** Compact adventure card: icon tile, title, goal. Level comes from the group. */
+const ScenarioCard = ({ scenario, onSelect, variants }: CardProps) => {
+  const Icon = getScenarioIcon(scenario.id);
+  return (
   <motion.button
     type="button"
     variants={variants}
@@ -156,9 +162,9 @@ const ScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
   >
     <span
       aria-hidden
-      className="flex h-11 w-11 shrink-0 select-none items-center justify-center rounded-xl bg-brand-soft text-2xl transition-transform duration-300 group-hover:scale-110"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-soft transition-transform duration-300 group-hover:scale-110"
     >
-      {scenario.emoji}
+      <Icon className="h-5 w-5 text-accent" />
     </span>
     <span className="min-w-0">
       <span className="block font-semibold leading-snug">{scenario.title}</span>
@@ -167,6 +173,7 @@ const ScenarioCard = ({ scenario, onSelect, variants }: CardProps) => (
       </span>
     </span>
   </motion.button>
-);
+  );
+};
 
 export default ScenarioPicker;

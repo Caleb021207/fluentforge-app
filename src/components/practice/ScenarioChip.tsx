@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Target } from "lucide-react";
 import type { ConversationScenario } from "@/data/conversationScenarios";
+import { getScenarioIcon } from "./scenarioIcons";
 
 interface ScenarioChipProps {
   scenario: ConversationScenario;
@@ -15,6 +16,7 @@ interface ScenarioChipProps {
  */
 const ScenarioChip = ({ scenario, onChange }: ScenarioChipProps) => {
   const reduceMotion = useReducedMotion();
+  const Icon = getScenarioIcon(scenario.id);
 
   return (
     <motion.div
@@ -29,9 +31,9 @@ const ScenarioChip = ({ scenario, onChange }: ScenarioChipProps) => {
         <div className="flex items-center gap-3 sm:gap-4">
           <span
             aria-hidden
-            className="flex h-12 w-12 shrink-0 select-none items-center justify-center rounded-xl bg-brand-soft text-2xl"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-soft"
           >
-            {scenario.emoji}
+            <Icon className="h-6 w-6 text-accent" />
           </span>
 
           <p className="min-w-0 flex-1 truncate font-bold leading-tight tracking-tight">
