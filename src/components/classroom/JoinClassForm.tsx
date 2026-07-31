@@ -37,7 +37,7 @@ const JoinClassForm = () => {
     if (!validation.success) {
       toast({
         title: classroomText.ERROR,
-        description: validation.error.errors[0].message,
+        description: validation.error.issues[0].message,
         variant: "destructive",
       });
       return;
