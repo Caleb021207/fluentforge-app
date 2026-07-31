@@ -1,0 +1,203 @@
+{
+  "id": "EN-U01-L07",
+  "title": "be: I am / You are / She is",
+  "skill_type": "grammar",
+  "position": 7,
+  "objective": "Build affirmative statements about yourself and others with the correct form of be: am, are, is.",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you build sentences with am, are and is: I am a student. You are new. She is my teacher. English always needs these small words — you cannot leave them out.]\n{{l1_contrast:copula_be}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L03", "EN-U01-L05", "EN-U01-L06"],
+  "grammar_refs": ["gram.be.affirmative_all_persons", "gram.be.third_person_is"],
+  "vocabulary_refs": [
+    "name",
+    "My name is…",
+    "I'm…",
+    "Where are you from?",
+    "I'm from…",
+    "country",
+    "Mexico",
+    "Brazil",
+    "English",
+    "I speak…"
+  ],
+  "new_vocabulary": [
+    {
+      "lemma": "teacher",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "She is my teacher.",
+      "ipa": "/ˈtiːtʃər/",
+      "translations": { "es": "profesor / profesora" }
+    },
+    {
+      "lemma": "student",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "I am a student.",
+      "ipa": "/ˈstuːdənt/",
+      "translations": { "es": "estudiante" }
+    },
+    {
+      "lemma": "class",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "This is my English class.",
+      "ipa": "/klæs/",
+      "translations": { "es": "clase" }
+    },
+    {
+      "lemma": "new",
+      "pos": "adjective",
+      "cefr_level": "A1",
+      "example_sentence": "She is a new student.",
+      "ipa": "/nuː/",
+      "translations": { "es": "nuevo / nueva" }
+    }
+  ],
+  "notes": "TODO_audio: ex2 (She is a teacher., 0.75x), ex7 (We are students., 1.0x), ex9 speaking model prompt. Band map §15: L07 vocab=4, grammar G1+G3. All four items are in band file §4 U1 sample list (items 12, 13, 14, 43).",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "teacher · student · class · new",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 120,
+      "rationale": "Form-meaning link for the four predicate words before any grammar work: every be-sentence in this lesson ends in one of them."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'She is a teacher.' — [L1: What exactly did you hear?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Perception before production: zero-copula L1 speakers (ar/zh/vi) must first HEAR the unstressed is to stop deleting it.",
+      "options": [
+        {
+          "label": "She is a teacher.",
+          "is_correct": true,
+          "rationale": "is links she and teacher; it is short and unstressed but always there."
+        },
+        {
+          "label": "She a teacher.",
+          "is_correct": false,
+          "rationale": "Zero-copula transfer (ar/zh/vi): the learner's L1 pattern without be — trains noticing the missing is."
+        },
+        {
+          "label": "She are a teacher.",
+          "is_correct": false,
+          "rationale": "Agreement error: catches learners who hear that a be-word is present but not which one."
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match each person word to the correct ending.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "I", "right": "am a student." },
+        { "left": "You", "right": "are new." },
+        { "left": "She", "right": "is my teacher." }
+      ],
+      "rationale": "The three-way am/are/is choice by subject is the core of G1+G3; matching isolates the agreement decision with no other load."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "I ___ a student. My teacher ___ from Mexico.",
+      "keys": ["am", "is"],
+      "distractor_bank": ["are", "be"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "am vs is with a noun subject (my teacher), not just a pronoun; 'be' in the bank catches learners who learned the dictionary form and use it uninflected ('I be')."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["is", "she", "a", "new", "student", "."],
+      "key": "She is a new student.",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Adjective-before-noun order inside a be-sentence: predicted es/pt transfer is 'a student new' (noun-adjective order); feedback names the adjective position."
+    },
+    {
+      "seq": 6,
+      "type": "cloze",
+      "prompt": "My teacher is Ana. ___ is from Brazil.",
+      "keys": ["She"],
+      "distractor_bank": ["Her", "Is"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "English subject pronouns are obligatory: es speakers drop them ('Es de Brasil' → 'Is from Brazil'); 'Her' catches possessive-for-subject confusion."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'We are students.' — [L1: What exactly did you hear?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Extends agreement to we + are and exposes the plural -s on students in connected speech (final-s deletion preview for vi/zh).",
+      "options": [
+        {
+          "label": "We are students.",
+          "is_correct": true,
+          "rationale": "are with we, and a final -s on students — both are easy to miss at natural speed."
+        },
+        {
+          "label": "We are student.",
+          "is_correct": false,
+          "rationale": "Misses the plural -s: the exact segment vi/zh speakers tend to delete when listening and speaking."
+        },
+        {
+          "label": "I am a student.",
+          "is_correct": false,
+          "rationale": "Person confusion: catches learners matching the familiar chunk instead of the subject they heard."
+        }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "translation",
+      "prompt": "[L1: Say it in English: 'Somos estudiantes.']",
+      "key": "We are students.",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Spanish drops the subject pronoun (Somos…); the English answer forces the learner to supply we — the single highest-value es-to-en habit change for be."
+    },
+    {
+      "seq": 9,
+      "type": "speaking",
+      "prompt": "[L1: Say who you are: your name and what you are — student or teacher.]",
+      "expected_pattern": "I'm {name}. I'm a {role}.",
+      "asr_focus": [
+        "presence of 'm in I'm (copula — ar/zh/vi zero-copula contrast)",
+        "article a before the role noun"
+      ],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Personalized production of G1; ASR checks the contracted copula, the #1 predicted omission for zero-copula L1s."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: Introduce yourself and one classmate to the AI: give both names, say what each of you is (student or teacher), and where each of you is from.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Forces all three forms (I am / she is / we are) in one real exchange; integrates L03 name chunks and L05 origin chunks; counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L07-DLG"
+    }
+  ]
+}

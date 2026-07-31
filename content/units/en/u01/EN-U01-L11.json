@@ -1,0 +1,277 @@
+{
+  "id": "EN-U01-L11",
+  "title": "Numbers 21–100 and Phone Numbers",
+  "skill_type": "vocab",
+  "position": 11,
+  "objective": "Say and understand numbers 21–100, and exchange phone numbers digit by digit with grouping pauses.",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you learn the numbers 21–100 and how to say a phone number in English: digit by digit, in small groups. Careful: thirteen and thirty sound very similar — listen for the stress!]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L04"],
+  "pron_refs": ["pron.stress.teens_vs_tens"],
+  "vocabulary_refs": [
+    "zero",
+    "one",
+    "two",
+    "four",
+    "five",
+    "six",
+    "eight",
+    "nine",
+    "thirteen",
+    "fifteen",
+    "twenty",
+    "student",
+    "class",
+    "What's your name?"
+  ],
+  "new_vocabulary": [
+    {
+      "lemma": "twenty-one",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Twenty-one students are in my class.",
+      "ipa": "/ˌtwenti ˈwʌn/",
+      "translations": { "es": "veintiuno" }
+    },
+    {
+      "lemma": "thirty",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Thirty is three times ten.",
+      "ipa": "/ˈθɜːrti/",
+      "translations": { "es": "treinta" }
+    },
+    {
+      "lemma": "forty",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Twenty and twenty is forty.",
+      "ipa": "/ˈfɔːrti/",
+      "translations": { "es": "cuarenta" }
+    },
+    {
+      "lemma": "fifty",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Fifty is five times ten.",
+      "ipa": "/ˈfɪfti/",
+      "translations": { "es": "cincuenta" }
+    },
+    {
+      "lemma": "sixty",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "My teacher is sixty.",
+      "ipa": "/ˈsɪksti/",
+      "translations": { "es": "sesenta" }
+    },
+    {
+      "lemma": "seventy",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Seventy is a big number.",
+      "ipa": "/ˈsevənti/",
+      "translations": { "es": "setenta" }
+    },
+    {
+      "lemma": "eighty",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Eighty is eight times ten.",
+      "ipa": "/ˈeɪti/",
+      "translations": { "es": "ochenta" }
+    },
+    {
+      "lemma": "ninety",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "Ninety is nine times ten.",
+      "ipa": "/ˈnaɪnti/",
+      "translations": { "es": "noventa" }
+    },
+    {
+      "lemma": "one hundred",
+      "pos": "number",
+      "cefr_level": "A1",
+      "example_sentence": "One hundred is ten times ten.",
+      "ipa": "/wʌn ˈhʌndrəd/",
+      "translations": { "es": "cien" }
+    },
+    {
+      "lemma": "number",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "Thirty is my number.",
+      "ipa": "/ˈnʌmbər/",
+      "translations": { "es": "número" }
+    },
+    {
+      "lemma": "phone number",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "My phone number is 555-0192.",
+      "ipa": "/ˈfoʊn ˌnʌmbər/",
+      "translations": { "es": "número de teléfono" }
+    },
+    {
+      "lemma": "What's your phone number?",
+      "pos": "chunk",
+      "cefr_level": "A1",
+      "example_sentence": "What's your phone number? It's 555-0148.",
+      "translations": { "es": "¿Cuál es tu número de teléfono?" }
+    }
+  ],
+  "notes": "TODO_audio: ex2 (thirteen, 1.0x), ex6 (phone number read-out with grouping pauses, 0.75x), ex7 dictation (2 plays), ex8 (Fifteen students are in my class., 1.0x), ex9 speaking model. Band map §15: L11 vocab=12 — nine number items (tens pattern + one hundred + twenty-one as the composition exemplar), number, phone number, and the question chunk. Compound numbers 22-99 are composed from taught tens + L04 units, not stored as separate items.",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "twenty-one · thirty · forty · fifty · sixty · seventy · eighty · ninety · one hundred",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 180,
+      "rationale": "The tens are the anchor forms: 22-99 are composed, not memorized, so these nine cards plus the L04 units cover the whole range."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'thirteen' — [L1: Which number did you hear?]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 30,
+      "rationale": "P1 word-stress discrimination on the highest-value number pair; mishearing teen/ty wrecks phone numbers, times and prices in real life.",
+      "options": [
+        {
+          "label": "Thirteen.",
+          "is_correct": true,
+          "rationale": "Stress on the second syllable: thir-TEEN."
+        },
+        {
+          "label": "Thirty.",
+          "is_correct": false,
+          "rationale": "Stress on the first syllable: THIR-ty — the classic pair; listeners using vowel length alone (es/vi) fall here."
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the figures to the words.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "34", "right": "thirty-four" },
+        { "left": "58", "right": "fifty-eight" },
+        { "left": "91", "right": "ninety-one" },
+        { "left": "100", "right": "one hundred" }
+      ],
+      "rationale": "Makes the composition rule visible: tens word + hyphen + unit word maps onto the two digits; 91 checks the rule where es composition differs (noventa y uno)."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "twenty, ___ , forty, fifty, ___ , seventy",
+      "keys": ["thirty", "sixty"],
+      "distractor_bank": ["thirteen", "sixteen"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Sequence retrieval of the tens with the teen look-alikes as written distractors — the same trap as ex2, now in production."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order to make the question.]",
+      "tokens": ["your", "what's", "number", "phone", "?"],
+      "key": "What's your phone number?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "Builds the new chunk on the What's-your-X frame from L03; predicted error is 'number phone' (es noun order: número de teléfono) — feedback names the noun-noun order."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'My phone number is five five five, two eight, nine one.' — [L1: Which number do you write?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 45,
+      "rationale": "Digit-by-digit capture with grouping pauses is the lesson's real-world task; the distractors are the two most common capture failures.",
+      "options": [
+        {
+          "label": "555-2891",
+          "is_correct": true,
+          "rationale": "Three groups with pauses: five five five — two eight — nine one."
+        },
+        {
+          "label": "555-2871",
+          "is_correct": false,
+          "rationale": "One digit off in the middle group: catches listeners who stop checking after the first group."
+        },
+        {
+          "label": "555-2819",
+          "is_correct": false,
+          "rationale": "Last two digits reversed: catches holding digits as a pair without their order."
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "dictation",
+      "prompt": "[audio, 2 plays: 0.75x then 1.0x] 'My phone number is five five zero, nine two.'",
+      "key": "My phone number is five five zero, nine two.",
+      "scoring": "case-insensitive; digits accepted for the number words; comma optional",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Sound-to-spelling for the possessive frame plus a digit string; zero is included because learners often only know 'oh' receptively."
+    },
+    {
+      "seq": 8,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Fifteen students are in my class.' — [L1: How many students?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 35,
+      "rationale": "The teen/ty stress contrast embedded in a full sentence at natural speed — harder than ex2's isolated word, and recycles L07 vocabulary.",
+      "options": [
+        {
+          "label": "15",
+          "is_correct": true,
+          "rationale": "fif-TEEN: final-syllable stress marks the teen."
+        },
+        {
+          "label": "50",
+          "is_correct": false,
+          "rationale": "FIF-ty: initial stress — the mirror error of ex2, now under sentence prosody."
+        }
+      ]
+    },
+    {
+      "seq": 9,
+      "type": "speaking",
+      "prompt": "[L1: Say your phone number digit by digit, in small groups, with a short pause between groups.]",
+      "expected_pattern": "My phone number is {digits}.",
+      "asr_focus": [
+        "grouping pauses between digit clusters",
+        "teen/ty stress if the number contains 13-19 or tens"
+      ],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "Personalized production of the target routine; pause placement is what makes a number copyable by a listener, so ASR checks rhythm, not just digits."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: Exchange phone numbers with the AI: ask with What's your phone number?, write down its answer, say your own number digit by digit, and repeat the AI's number back to check it.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 130,
+      "rationale": "The §2 objective verbatim — exchange phone numbers; the repeat-back move forces both comprehension and production of digit strings in one exchange.",
+      "ai_interaction_ref": "EN-U01-L11-DLG"
+    }
+  ]
+}

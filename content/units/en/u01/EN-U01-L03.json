@@ -1,0 +1,130 @@
+{
+  "id": "EN-U01-L03",
+  "title": "What's Your Name?",
+  "skill_type": "speaking",
+  "position": 3,
+  "objective": "Ask and answer What's your name? with I'm… / My name is…, using Nice to meet you.",
+  "est_minutes": 12,
+  "intro_md": "[L1: In this lesson you learn to ask someone's name and to give yours with 'I'm…' and 'My name is…'. You also learn 'Nice to meet you.' — what you say the first time you meet someone.]\n{{l1_contrast:copula_be}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L01", "EN-U01-L02"],
+  "grammar_refs": ["gram.be.am_are_affirmative", "gram.poss.my_your"],
+  "vocabulary_refs": ["hello", "hi", "goodbye", "See you later.", "name", "spell"],
+  "notes": "TODO_audio: exercises 2, 7, 8 carry the spoken line as written transcript in the prompt; audio assets not yet produced. Band map: U1 ai_written lesson is L03/L17 (controlled dialogue completion) — ex 9 is that slot for L03.",
+  "new_vocabulary": [
+    { "lemma": "nice", "pos": "adjective", "cefr_level": "A1", "example_sentence": "Nice to meet you.", "ipa": "/naɪs/", "translations": { "es": "agradable" } },
+    { "lemma": "meet", "pos": "verb", "cefr_level": "A1", "example_sentence": "Nice to meet you.", "ipa": "/miːt/", "translations": { "es": "conocer (a alguien por primera vez)" } },
+    { "lemma": "What's your name?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Hello! What's your name?", "ipa": "/wʌts jɔːr ˈneɪm/", "translations": { "es": "¿Cómo te llamas?" } },
+    { "lemma": "My name is…", "pos": "chunk", "cefr_level": "A1", "example_sentence": "My name is Ana.", "ipa": "/maɪ ˈneɪm ɪz/", "translations": { "es": "Me llamo… / Mi nombre es…" } },
+    { "lemma": "I'm…", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Hi! I'm Ana.", "ipa": "/aɪm/", "translations": { "es": "Soy… (contracción de 'I am')" } },
+    { "lemma": "Nice to meet you.", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Nice to meet you, too.", "ipa": "/ˌnaɪs tə ˈmiːt juː/", "translations": { "es": "Mucho gusto." } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "nice · meet · What's your name? · My name is… · I'm… · Nice to meet you.",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 150,
+      "rationale": "Establish form-meaning link with audio for both answer frames and the meeting formula before any production."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Hello! What's your name?' — [L1: What is the speaker doing?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Function discrimination among this lesson's chunks and L01 farewells: the reply depends on recognizing a question for a name, not on catching every word.",
+      "options": [
+        { "label": "What's your name?", "is_correct": true, "rationale": "The question asks for a name." },
+        { "label": "Nice to meet you.", "is_correct": false, "rationale": "Also said at first meetings — forces listening for the question form, not the situation." },
+        { "label": "Goodbye!", "is_correct": false, "rationale": "A farewell; catches learners who answer from the greeting 'Hello' without processing the question." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match each line to the best reply.]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your name?", "right": "My name is Ana." },
+        { "left": "Nice to meet you.", "right": "Nice to meet you, too." },
+        { "left": "Hello!", "right": "Hi!" },
+        { "left": "Goodbye!", "right": "See you later!" }
+      ],
+      "rationale": "Adjacency pairs: each opener has a conventional reply. Recycles L01 greetings/farewells beside the new chunks so the four functions stay distinct."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "A: ___ your name?  B: I'm Sara.",
+      "keys": ["What's"],
+      "distractor_bank": ["How's", "Who's"],
+      "difficulty": 0.3,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Targets the question word: es '¿Cómo te llamas?' transfers as 'How is your name?' — 'How's' is the L1-predicted error; 'Who's' asks about a third person."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["is", "name", "my", "{your name}", "."],
+      "key": "My name is {your name}.",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Assembles the full answer frame; feedback highlights that 'my' comes before 'name' and that 'is' cannot be dropped (zero-copula L1s predictably omit it)."
+    },
+    {
+      "seq": 6,
+      "type": "cloze",
+      "prompt": "A: Nice to ___ you!  B: Nice to meet you, ___.",
+      "keys": ["meet", "too"],
+      "distractor_bank": ["see", "name", "to"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Chunk integrity plus the echo reply. 'see' is the diagnostic distractor: es 'conocer/ver' overlap makes 'Nice to see you' feel right, but it is for people you already know."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Hi! I'm Tom.' — [L1: What is a good reply?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Trains the whole first-meeting routine as a move sequence: after a self-introduction, the reply greets back and uses the meeting formula.",
+      "options": [
+        { "label": "Hi, Tom! Nice to meet you.", "is_correct": true, "rationale": "Greets back and closes the first-meeting pair." },
+        { "label": "Goodbye, Tom!", "is_correct": false, "rationale": "A farewell in an opening slot — function confusion recycled from L01." },
+        { "label": "What's my name?", "is_correct": false, "rationale": "my/your pronoun flip — a frequent early error when chunks are memorized without the pronoun analyzed." }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[audio] 'What's your name?' → [L1: Answer with your real name, then spell it.]",
+      "expected_pattern": "My name is {name}. {letter_sequence}",
+      "asr_focus": ["'is' present in the frame (zero-copula L1 check)", "letter names intelligible (L02 carry-over)"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Personalized production chaining L03's frame with L02's spelling — the exact sequence used on forms and phones."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: You meet a new classmate. Greet them, exchange names, use 'Nice to meet you.', and say goodbye.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Controlled dialogue completion (band map: U1 ai_written slot at L03); integrates L01 greetings with both L03 name frames in real time and counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L03-DLG"
+    }
+  ]
+}

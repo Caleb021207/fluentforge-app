@@ -1,0 +1,130 @@
+{
+  "id": "EN-U01-L15",
+  "title": "Survival Phrases: Please, Sorry, Can You Repeat That?",
+  "skill_type": "speaking",
+  "position": 15,
+  "objective": "Use please, thank you, Excuse me, and repair phrases when you do not understand.",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you learn polite words and \"help\" phrases. English uses please and thank you very often — more than many languages. \"Excuse me\" gets attention; \"I'm sorry\" apologizes; rising \"Sorry?\" means: say it again. When you don't understand, you can ALWAYS say: Sorry? · Can you repeat that, please? · How do you spell that? · I don't understand. Using these phrases is good English, never a failure — they work in every conversation in this course.]\n{{l1_contrast:politeness_excuse_vs_sorry}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L02", "EN-U01-L03"],
+  "vocabulary_refs": ["What's your name?", "My name is…", "name", "spell", "country", "Where are you from?"],
+  "notes": "TODO_audio: exercises 2 and 7 need recorded audio; the quoted text stands in for the recording. Exercise 7 requires rising intonation on 'Sorry?' in the recording. Flashcards (exercise 1) need audio fronts.",
+  "new_vocabulary": [
+    { "lemma": "please", "pos": "adverb", "cefr_level": "A1", "example_sentence": "Can you repeat that, please?", "ipa": "/pliːz/", "translations": { "es": "por favor" } },
+    { "lemma": "thank you", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Thank you, Ms Lee.", "ipa": "/ˈθæŋk ju/", "translations": { "es": "gracias" } },
+    { "lemma": "Excuse me.", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Excuse me, are you Mr Santos?", "ipa": "/ɪkˈskjuːz mi/", "translations": { "es": "Disculpe / Perdone (para llamar la atención)" } },
+    { "lemma": "Sorry?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Sorry? Can you repeat that, please?", "ipa": "/ˈsɑːri/", "translations": { "es": "¿Cómo? / ¿Perdón? (no oí bien)" } },
+    { "lemma": "I'm sorry.", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Oh, I'm sorry!", "ipa": "/aɪm ˈsɑːri/", "translations": { "es": "Lo siento." } },
+    { "lemma": "Can you repeat that, please?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Sorry? Can you repeat that, please?", "translations": { "es": "¿Puede repetirlo, por favor?" } },
+    { "lemma": "How do you spell that?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Kowalski? How do you spell that?", "translations": { "es": "¿Cómo se escribe? / ¿Cómo se deletrea?" } },
+    { "lemma": "I don't understand.", "pos": "chunk", "cefr_level": "A1", "example_sentence": "I'm sorry, I don't understand.", "translations": { "es": "No entiendo." } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "please · thank you · Excuse me. · Sorry? · I'm sorry. · Can you repeat that, please? · How do you spell that? · I don't understand.",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 180,
+      "rationale": "The eight survival chunks with audio; these are the always-permitted repair moves for every later AI interaction, so form-meaning links come first."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'Sorry? Can you repeat that, please?' — [L1: What does the speaker want?]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Function-level comprehension; separating rising Sorry? (repair) from I'm sorry (apology) is the lesson's core pragmatic split.",
+      "options": [
+        { "label": "[L1: to hear it again]", "is_correct": true, "rationale": "Sorry? plus repeat = please say it again." },
+        { "label": "[L1: to say sorry for a mistake]", "is_correct": false, "rationale": "That is falling 'I'm sorry.' — rising Sorry? asks, it does not apologize." },
+        { "label": "[L1: to hear the letters of a word]", "is_correct": false, "rationale": "That is 'How do you spell that?' — repeat and spell are different repair asks." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Something went wrong. Choose the right phrase for each situation.]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 75,
+      "pairs": [
+        { "left": "Can you repeat that, please?", "right": "[L1: You didn't hear it. You want to hear it again.]" },
+        { "left": "How do you spell that?", "right": "[L1: You want to write a name. You need the letters.]" },
+        { "left": "I don't understand.", "right": "[L1: You hear the words but the meaning is not clear.]" },
+        { "left": "Excuse me.", "right": "[L1: You want a stranger's attention.]" }
+      ],
+      "rationale": "Selecting the right repair move for the breakdown type is the actual skill scored in every later AI interaction (band repair-first design)."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "[L1: You take another student's pen by mistake. What do you say?] ___",
+      "keys": ["I'm sorry"],
+      "distractor_bank": ["Excuse me", "Sorry?"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "es 'perdón/disculpa' covers all three English forms, so the three-way split (apology vs attention vs repair) must be forced by situation."
+    },
+    {
+      "seq": 5,
+      "type": "cloze",
+      "prompt": "A: Excuse me, what's your name?  B: My name is Maria.  A: How do you spell that?  B: M-A-R-I-A.  A: ___ you!",
+      "keys": ["Thank"],
+      "distractor_bank": ["Please", "Sorry"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "A complete polite exchange: attention-getter, question, spelling repair (recycles L02), closing thanks — the blank targets the closing move learners most often omit (politeness-density culture note)."
+    },
+    {
+      "seq": 6,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order to ask for repetition politely.]",
+      "tokens": ["can", "you", "repeat", "that", "please", "?"],
+      "key": "Can you repeat that, please?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Fixes the inverted can-question shape of the chunk; predicted error is statement order 'You can repeat that?' — feedback names the fronted 'can'."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Sorry?' — [L1: The voice goes UP at the end. What does the speaker mean?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Melody carries the meaning difference between the sorry-pair; previews L16's question-melody work with a word the learner just met.",
+      "options": [
+        { "label": "[L1: Say it again, please — I didn't hear you.]", "is_correct": true, "rationale": "Rising Sorry? is a repair ask, not an apology." },
+        { "label": "[L1: I apologize.]", "is_correct": false, "rationale": "The apology is falling 'I'm sorry.' — the rise changes the meaning." }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "cloze",
+      "prompt": "[L1: The AI says a long sentence. The meaning is not clear to you. What do you say?] I ___ understand.",
+      "keys": ["don't"],
+      "distractor_bank": ["not", "no"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "es 'no entiendo' predicts 'I no understand'; the don't-form is taught as an unanalyzed chunk here — do-negation grammar arrives in U2-L06."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: The AI talks fast on purpose. Have a short conversation: answer questions about your name and country. When you don't understand, use Sorry? or Can you repeat that, please? — using them is a win, not a mistake.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 150,
+      "rationale": "Planted breakdowns make the repair phrases real tools under pressure; repair use is scored positively per the band's repair-first design and rehearses the always-permitted moves for L17/L18.",
+      "ai_interaction_ref": "EN-U01-L15-DLG"
+    }
+  ]
+}

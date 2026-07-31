@@ -1,0 +1,128 @@
+{
+  "id": "EN-U01-L06",
+  "title": "Nationalities and Languages",
+  "skill_type": "speaking",
+  "position": 6,
+  "objective": "State nationality and language(s): I'm…, I speak…; ask Do you speak…? as a chunk.",
+  "est_minutes": 12,
+  "intro_md": "[L1: In this lesson you learn to say your nationality ('I'm Mexican.') and your languages ('I speak Spanish and English.'). You also learn the question 'Do you speak English?' — learn it as one fixed phrase; the grammar behind it comes later.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L05"],
+  "vocabulary_refs": ["country", "Where are you from?", "I'm from…", "Mexico", "Brazil", "China", "I'm…"],
+  "notes": "Nationality set is keyed to three of the L05 countries (Mexican/Brazilian/Chinese) so every nationality has its country already taught; remaining §4 nationalities are budgeted to later lessons per the band file's region-personalization [proposed]. 'Do you speak English?' is taught as an unanalyzed chunk per §4 item 21 (do-support is U2). TODO_audio: exercises 2, 7, 8 carry the spoken line as written transcript in the prompt; audio assets not yet produced.",
+  "new_vocabulary": [
+    { "lemma": "language", "pos": "noun", "cefr_level": "A1", "example_sentence": "English is a language.", "ipa": "/ˈlæŋɡwɪdʒ/", "translations": { "es": "idioma" } },
+    { "lemma": "English", "pos": "noun", "cefr_level": "A1", "example_sentence": "I speak English.", "ipa": "/ˈɪŋɡlɪʃ/", "translations": { "es": "inglés" } },
+    { "lemma": "Spanish", "pos": "noun", "cefr_level": "A1", "example_sentence": "I speak Spanish.", "ipa": "/ˈspænɪʃ/", "translations": { "es": "español" } },
+    { "lemma": "Mexican", "pos": "adjective", "cefr_level": "A1", "example_sentence": "She's Mexican. She's from Mexico.", "ipa": "/ˈmeksɪkən/", "translations": { "es": "mexicano/mexicana" } },
+    { "lemma": "Brazilian", "pos": "adjective", "cefr_level": "A1", "example_sentence": "He's Brazilian. He's from Brazil.", "ipa": "/brəˈzɪliən/", "translations": { "es": "brasileño/brasileña" } },
+    { "lemma": "Chinese", "pos": "adjective", "cefr_level": "A1", "example_sentence": "I'm Chinese. I speak Chinese.", "ipa": "/ˌtʃaɪˈniːz/", "translations": { "es": "chino/china (también el idioma chino)" } },
+    { "lemma": "I speak…", "pos": "chunk", "cefr_level": "A1", "example_sentence": "I speak Spanish and English.", "ipa": "/aɪ ˈspiːk/", "translations": { "es": "Hablo…" } },
+    { "lemma": "Do you speak English?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Do you speak English? Yes, I do.", "ipa": "/də jə ˌspiːk ˈɪŋɡlɪʃ/", "translations": { "es": "¿Hablas inglés?" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "language · English · Spanish · Mexican · Brazilian · Chinese · I speak… · Do you speak English?",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 160,
+      "rationale": "Establish form-meaning link with audio for the nationality/language set and both new frames before any production."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio] 'She's from Mexico. She's Mexican.' — [L1: Which word says her nationality?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Country vs nationality forms differ by one weak syllable (/koʊ/ vs /kən/); hearing the difference must precede producing it.",
+      "options": [
+        { "label": "Mexican", "is_correct": true, "rationale": "The -an adjective form that follows 'She's' directly, with no 'from'." },
+        { "label": "Mexico", "is_correct": false, "rationale": "The country — used with 'from'; catches learners treating the two forms as interchangeable." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the country to the nationality.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 55,
+      "pairs": [
+        { "left": "Mexico", "right": "Mexican" },
+        { "left": "Brazil", "right": "Brazilian" },
+        { "left": "China", "right": "Chinese" }
+      ],
+      "rationale": "The three pairs use three different suffixes (-an, -ian, -ese): the mapping is item-by-item memory, not a rule — this exercise makes that explicit early."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "A: Where are you from?  B: I'm from Brazil. I'm ___.",
+      "keys": ["Brazilian"],
+      "distractor_bank": ["Brazil", "Mexican"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Form selection after 'be': 'Brazil' catches the high-frequency error 'I'm Brazil'; 'Mexican' checks meaning is driving the choice, not just word shape."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["English", "you", "speak", "do", "?"],
+      "key": "Do you speak English?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "es yes/no questions need no auxiliary (¿Hablas inglés?), so the predicted error is 'You speak English?' — ordering forces the chunk to start with 'Do'."
+    },
+    {
+      "seq": 6,
+      "type": "cloze",
+      "prompt": "A: ___ you speak English?  B: Yes, I ___.",
+      "keys": ["Do", "do"],
+      "distractor_bank": ["Are", "Speak"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "'Are you speak English?' is the documented overgeneralization of L05's be-questions; 'Speak you English?' is direct verb-fronting transfer. The short answer 'Yes, I do.' rides along as part of the chunk."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Do you speak Chinese?' — 'No, I don't. I speak English.' — [L1: Which language does the speaker speak?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Two-turn listening: the answer contradicts the question, so the learner must track who says what and process the negation, not keyword-match.",
+      "options": [
+        { "label": "English", "is_correct": true, "rationale": "Heard after 'I speak' in the answer turn." },
+        { "label": "Chinese", "is_correct": false, "rationale": "Heard only in the question — catches keyword-matching across turns without processing 'No, I don't.'" }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[audio] 'Do you speak Spanish?' → [L1: Answer truthfully, then say what you speak.]",
+      "expected_pattern": "I speak {language}.",
+      "asr_focus": ["'I speak' frame produced (not 'I'm speak' — be-overgeneralization check)", "language name intelligible"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "Personalized production of the frame; ASR flags 'I'm speak', the merge of this lesson's two frames and the most likely blend error."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: A new classmate asks where you are from, your nationality, and your languages. Answer, then ask them back.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Integrates L05 origin frames with L06 nationality/language frames; the ask-back requirement pushes production of 'Do you speak…?', not just comprehension. Counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L06-DLG"
+    }
+  ]
+}

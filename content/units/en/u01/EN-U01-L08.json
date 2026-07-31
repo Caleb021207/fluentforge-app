@@ -1,0 +1,170 @@
+{
+  "id": "EN-U01-L08",
+  "title": "be: Negatives and Short Answers",
+  "skill_type": "grammar",
+  "position": 8,
+  "objective": "Say what is not true with I'm not / isn't / aren't, and answer questions with Yes, I am / No, I'm not.",
+  "est_minutes": 12,
+  "intro_md": "[L1: In this lesson you say what is NOT true — I'm not a teacher — and give short answers: Yes, I am. / No, I'm not. Careful: short answers end in the full form. Say Yes, I am — never Yes, I'm.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L07"],
+  "grammar_refs": ["gram.be.negation", "gram.be.short_answers"],
+  "vocabulary_refs": [
+    "teacher",
+    "student",
+    "new",
+    "I'm…",
+    "I'm from…",
+    "Where are you from?",
+    "Mexico",
+    "Brazil",
+    "Vietnam",
+    "Haiti"
+  ],
+  "new_vocabulary": [],
+  "notes": "TODO_audio: ex2 (I'm not a teacher. I'm a student., 0.75x), ex6 (Are you a student?, 1.0x), ex9 speaking model prompt. Band map §15 allots L08 no new vocabulary (grammar G5 only): all negative and short-answer forms are function words; this file honestly teaches 0 items and recycles L04-L07 content words.",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "I'm not… · isn't · aren't · Yes, I am. · No, I'm not.",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 90,
+      "rationale": "Presents the negative and short-answer frames as chunks with audio before rule work; these five frames are the entire target of the lesson."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'I'm not a teacher. I'm a student.' — [L1: What is the speaker?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "not is short and unstressed; learners who miss it understand the opposite of what was said — the highest-cost listening error this lesson prevents.",
+      "options": [
+        {
+          "label": "A student.",
+          "is_correct": true,
+          "rationale": "not negates teacher; the second sentence states the fact."
+        },
+        {
+          "label": "A teacher.",
+          "is_correct": false,
+          "rationale": "Hears the noun but misses not — the exact miscomprehension this exercise trains against."
+        },
+        {
+          "label": "A new student.",
+          "is_correct": false,
+          "rationale": "Adds information that was never said; catches guessing from known words instead of listening."
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "cloze",
+      "prompt": "I ___ not from Brazil. I'm from Mexico.",
+      "keys": ["am"],
+      "distractor_bank": ["is", "are"],
+      "difficulty": 0.3,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "not attaches after the conjugated be-form; agreement (am with I) must survive under negation, where load makes learners regress."
+    },
+    {
+      "seq": 4,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["not", "I'm", "teacher", "a", "."],
+      "key": "I'm not a teacher.",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "not placement directly after the contraction; predicted ar/zh error is dropping be entirely ('I not teacher') — the token set makes I'm indivisible so the copula cannot be lost."
+    },
+    {
+      "seq": 5,
+      "type": "matching",
+      "prompt": "[L1: Match each question to its short answer.]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Are you a student?", "right": "Yes, I am." },
+        { "left": "Are you from Vietnam?", "right": "No, I'm not." },
+        { "left": "Is she your teacher?", "right": "Yes, she is." }
+      ],
+      "rationale": "Short answers echo the be-form of the question and nothing else; matching across persons (you→I, she→she) blocks the bare 'Yes.' answer transfer from es/zh."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Are you a student?' — [L1: Choose the correct short answer.]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Targets the single most common short-answer error at this level: ending the answer with the contraction (Yes, I'm).",
+      "options": [
+        {
+          "label": "Yes, I am.",
+          "is_correct": true,
+          "rationale": "Affirmative short answers use the full, stressed form am — a sentence cannot end in I'm."
+        },
+        {
+          "label": "Yes, I'm.",
+          "is_correct": false,
+          "rationale": "The classic error: contractions are never sentence-final in English — this is the trap the lesson exists to defuse."
+        },
+        {
+          "label": "Yes, I are.",
+          "is_correct": false,
+          "rationale": "Agreement error under question pressure: are is copied from the question instead of switching to am."
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "cloze",
+      "prompt": "A: Are you from Vietnam?  B: No, I'm ___. I'm from Haiti.",
+      "keys": ["not"],
+      "distractor_bank": ["no", "don't"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "es 'no soy' maps two Spanish words onto English no + not: 'no' in the bank catches direct transfer, 'don't' catches do-negation overgeneralized to be."
+    },
+    {
+      "seq": 8,
+      "type": "translation",
+      "prompt": "[L1: Say it in English: 'No soy profesora. Soy estudiante.']",
+      "key": "I'm not a teacher. I'm a student.",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Bundles the three es-to-en changes in one item: supply the pronoun, use not (not 'no'), and add the article a before the role noun."
+    },
+    {
+      "seq": 9,
+      "type": "speaking",
+      "prompt": "[audio] 'Are you a teacher?' → [L1: Answer truthfully with a short answer, then say what you are.]",
+      "expected_pattern": "No, I'm not. I'm a {role}.",
+      "asr_focus": [
+        "released final t in not (vi/zh final-consonant deletion)",
+        "full am if the answer is Yes, I am"
+      ],
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Produces the short-answer-plus-correction move learners need constantly in real intake conversations; ASR checks the audible not."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: The AI has wrong ideas about you — your name, your country, what you are. Listen, correct each one with a negative, then say what is true.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "The band-file communicative need for G5 verbatim — correct wrong information about you; recycles L03/L05 chunks under real-time pressure; guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L08-DLG"
+    }
+  ]
+}

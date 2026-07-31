@@ -1,0 +1,157 @@
+{
+  "id": "EN-U01-L10",
+  "title": "What, Where, Who: WH-Questions with be",
+  "skill_type": "grammar",
+  "position": 10,
+  "objective": "Ask for personal information with what, where and who, using falling intonation.",
+  "est_minutes": 12,
+  "intro_md": "[L1: In this lesson you ask for personal information with what, where and who. You already know two of these questions! In WH-questions your voice goes DOWN at the end: Where are you from?]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L09"],
+  "grammar_refs": ["gram.be.wh_questions"],
+  "pron_refs": ["pron.intonation.wh_falling"],
+  "vocabulary_refs": [
+    "What's your name?",
+    "Where are you from?",
+    "name",
+    "country",
+    "language",
+    "teacher",
+    "student",
+    "Mexico",
+    "Brazil",
+    "Vietnam",
+    "My name is…",
+    "I'm from…"
+  ],
+  "new_vocabulary": [],
+  "notes": "TODO_audio: ex3 (Where is she from?, 0.75x), ex6 (Where are you from? falling contour, 1.0x), ex8 speaking model prompt. Band map §15 allots L10 no new vocabulary (grammar G7 only): what/where/who are function words and both anchor chunks were taught in L03/L05.",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "what · where · who · What's your name? · Where are you from?",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 100,
+      "rationale": "Reactivates the two question chunks learners already own and isolates the three WH-words inside them — the lesson generalizes from chunk to system."
+    },
+    {
+      "seq": 2,
+      "type": "matching",
+      "prompt": "[L1: Match each question to its answer.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your name?", "right": "My name is Sara." },
+        { "left": "Where are you from?", "right": "I'm from Vietnam." },
+        { "left": "Who is your teacher?", "right": "My teacher is Omar." }
+      ],
+      "rationale": "Each WH-word maps to an information type — thing, place, person; the selection decision, not the syntax, is the new content of this lesson."
+    },
+    {
+      "seq": 3,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'Where is she from?' — [L1: What does the speaker want to know?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Comprehension check on the WH-word alone: learners often key on the sentence frame and answer the wrong question in real conversation.",
+      "options": [
+        {
+          "label": "A country.",
+          "is_correct": true,
+          "rationale": "where asks about a place — here, the country she is from."
+        },
+        {
+          "label": "A name.",
+          "is_correct": false,
+          "rationale": "Transfers from the more familiar What's-your-name chunk; catches frame-matching instead of WH-word listening."
+        },
+        {
+          "label": "A language.",
+          "is_correct": false,
+          "rationale": "Plausible topic from L06 conversations; forces attention to where, not to the general topic of introductions."
+        }
+      ]
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "A: ___ is your teacher?  B: My teacher is Ana.  A: ___ is she from?  B: She's from Brazil.",
+      "keys": ["Who", "Where"],
+      "distractor_bank": ["What", "Is"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Forced choice among WH-words over identical be-syntax; What in the bank catches the highest-frequency confusion (what/who for people), Is catches yes/no-question carryover from L09."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["your", "is", "name", "what", "?"],
+      "key": "What is your name?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Unpacks the fossilized What's into what + is, showing the same inversion learners drilled in L09 — the chunk becomes analyzable grammar."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Where are you from?' — [L1: At the end, does the voice go up or down?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 35,
+      "rationale": "P3 contrast with L09: WH-questions fall while yes/no questions rise; melody is the only audible difference between friendly and confused-sounding questions.",
+      "options": [
+        {
+          "label": "Down.",
+          "is_correct": true,
+          "rationale": "WH-questions end with falling intonation — the WH-word already signals the question."
+        },
+        {
+          "label": "Up.",
+          "is_correct": false,
+          "rationale": "Transfer from the L09 yes/no melody (and from zh/vi question rises); rising WH-questions sound like disbelief in English."
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "translation",
+      "prompt": "[L1: Ask it in English: '¿Quién es tu profesora?']",
+      "key": "Who is your teacher?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Maps es quién onto who while keeping be-inversion; blocks the frequent 'Who is she your teacher?' double-subject blend by requiring the clean frame."
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[L1: Ask the AI about its country: ask with where, and let your voice fall at the end.]",
+      "expected_pattern": "Where are you from?",
+      "asr_focus": [
+        "falling final contour (WH melody, P3)",
+        "are present between where and you (no 'Where you from?')"
+      ],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "Produces the falling contour on a known chunk; ASR checks the copula that zh/vi/ar speakers drop inside WH-questions."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: Interview the AI: ask its name, its country, and who its teacher is. Then the AI asks you the same three questions — answer them.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 130,
+      "rationale": "G7's communicative need is getting personal information; the symmetric interview forces both question production and answer production with all three WH-words.",
+      "ai_interaction_ref": "EN-U01-L10-DLG"
+    }
+  ]
+}

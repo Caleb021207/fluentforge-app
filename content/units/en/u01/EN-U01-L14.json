@@ -1,0 +1,148 @@
+{
+  "id": "EN-U01-L14",
+  "title": "This Is / That Is: Things Around You",
+  "skill_type": "vocab",
+  "position": 14,
+  "objective": "Name everyday objects and point to them with this and that; ask What's this?",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you learn words for things around you: pen, book, phone, bag, chair, table. You point to a thing NEAR you with \"this\" and to a thing FAR from you with \"that\": This is my phone. That is a chair. To ask about a thing, say \"What's this?\"]\n{{l1_contrast:demonstratives_this_that}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L07", "EN-U01-L13"],
+  "grammar_refs": ["gram.demonstratives.this_that", "gram.articles.a_an"],
+  "vocabulary_refs": ["What's your name?", "My name is…", "What do you do?", "cook", "English", "Nice to meet you.", "new"],
+  "notes": "TODO_audio: exercises 2 and 5 need recorded audio; the quoted text in the prompt stands in for the recording. Flashcards (exercise 1) need audio fronts. Coordination: 'new' (band item 43) was introduced by L07 ('new student'), so this lesson recycles it via vocabulary_refs; 'desk' from the band's classroom-object tail holds L14's allocation of 10 new items.",
+  "new_vocabulary": [
+    { "lemma": "this", "pos": "determiner", "cefr_level": "A1", "example_sentence": "This is my phone.", "ipa": "/ðɪs/", "translations": { "es": "este / esta / esto (cerca)" } },
+    { "lemma": "that", "pos": "determiner", "cefr_level": "A1", "example_sentence": "That is my bag.", "ipa": "/ðæt/", "translations": { "es": "ese / esa / eso (lejos)" } },
+    { "lemma": "What's this?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "What's this? — It's a pen.", "ipa": "/wʌts ˈðɪs/", "translations": { "es": "¿Qué es esto?" } },
+    { "lemma": "pen", "pos": "noun", "cefr_level": "A1", "example_sentence": "This is a pen.", "ipa": "/pɛn/", "translations": { "es": "bolígrafo, pluma" } },
+    { "lemma": "book", "pos": "noun", "cefr_level": "A1", "example_sentence": "That's my book.", "ipa": "/bʊk/", "translations": { "es": "libro" } },
+    { "lemma": "phone", "pos": "noun", "cefr_level": "A1", "example_sentence": "My phone is new.", "ipa": "/foʊn/", "translations": { "es": "teléfono, celular" } },
+    { "lemma": "bag", "pos": "noun", "cefr_level": "A1", "example_sentence": "This is my bag.", "ipa": "/bæɡ/", "translations": { "es": "bolso, mochila" } },
+    { "lemma": "chair", "pos": "noun", "cefr_level": "A1", "example_sentence": "This is a chair.", "ipa": "/tʃɛr/", "translations": { "es": "silla" } },
+    { "lemma": "table", "pos": "noun", "cefr_level": "A1", "example_sentence": "That's a table.", "ipa": "/ˈteɪbəl/", "translations": { "es": "mesa" } },
+    { "lemma": "desk", "pos": "noun", "cefr_level": "A1", "example_sentence": "This is my desk.", "ipa": "/dɛsk/", "translations": { "es": "escritorio, pupitre" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "this · that · What's this? · pen · book · phone · bag · chair · table · desk",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 180,
+      "rationale": "Form-meaning link for the six objects plus the this/that pair and the question chunk, with audio, before production."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'What's this? — It's a pen.' — [L1: Which thing do they talk about?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Comprehension of the answer slot after 'It's a'; trains hearing the object name inside the question-answer pair.",
+      "options": [
+        { "label": "pen", "is_correct": true, "rationale": "Named after 'It's a' — the answer slot of What's this?" },
+        { "label": "bag", "is_correct": false, "rationale": "Another taught object; forces word-level listening, not guessing." },
+        { "label": "this", "is_correct": false, "rationale": "Catches learners who match the question word instead of the answer." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the sentence to the situation.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "This is my phone.", "right": "[L1: The phone is in my hand.]" },
+        { "left": "That is my phone.", "right": "[L1: The phone is across the room.]" },
+        { "left": "This is my desk.", "right": "[L1: You sit at the desk right now.]" },
+        { "left": "What's that?", "right": "[L1: You ask about a thing far from you.]" }
+      ],
+      "rationale": "Anchors this/that to physical distance in context, not translation; adds What's that? as the far twin of the taught question chunk and deploys the new object desk in a near-situation."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "[L1: The pen is in your hand.] ___ is a pen.",
+      "keys": ["This"],
+      "distractor_bank": ["That", "It"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "First forced distance choice from a situational cue; 'It' separates pointing (this/that) from referring back (it), a persistent A1 confusion."
+    },
+    {
+      "seq": 5,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'That's a chair.' — [L1: What do you hear?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "The contracted 's in That's is quiet; zero-copula L1s (zh/ar/vi) systematically drop it — perception before production per the copula contrast note.",
+      "options": [
+        { "label": "That's a chair.", "is_correct": true, "rationale": "That IS a chair — the 's is small but always there." },
+        { "label": "That a chair.", "is_correct": false, "rationale": "Missing 's. Zero-copula transfer (zh/ar/vi drop 'is' after this/that)." },
+        { "label": "That's a table.", "is_correct": false, "rationale": "Wrong object; keeps word-level listening honest while the grammar is in focus." }
+      ]
+    },
+    {
+      "seq": 6,
+      "type": "cloze",
+      "prompt": "[L1: The book is on your desk, near you.] A: What's ___?  B: It's ___ English book.",
+      "keys": ["this", "an"],
+      "distractor_bank": ["that", "a"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Integrates the new question chunk with L13's a/an: near cue forces 'this', vowel-initial English forces 'an' — 'a English' is a high-frequency A1 error."
+    },
+    {
+      "seq": 7,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order to ask about a thing near you.]",
+      "tokens": ["is", "this", "what", "?"],
+      "key": "What is this?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Expands the chunk What's this? into its full form; predicted in-situ error 'This is what?' (zh transfer) — feedback names the fronted question word."
+    },
+    {
+      "seq": 8,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["new", "this", "phone", "my", "is"],
+      "key": "This is my new phone.",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Adjective-before-noun order: es speakers say 'teléfono nuevo', so 'my phone new' is the predicted order — feedback names the adjective position."
+    },
+    {
+      "seq": 9,
+      "type": "matching",
+      "prompt": "[L1: Three questions start with What. Match each to its answer.]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's this?", "right": "It's a pen." },
+        { "left": "What's your name?", "right": "My name is Omar." },
+        { "left": "What do you do?", "right": "I'm a cook." }
+      ],
+      "rationale": "All three unit questions begin with What — learners must attend past the first word to the frame. Recycles L03 (N-2) and L13."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: Look around you. Tell the AI about three real things: two near you (this), one far (that). Then ask the AI about one thing.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Real deixis with the learner's own environment; the AI checks this/that consistency with stated distance. Counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L14-DLG"
+    }
+  ]
+}

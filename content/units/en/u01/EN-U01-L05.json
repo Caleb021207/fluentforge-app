@@ -1,0 +1,130 @@
+{
+  "id": "EN-U01-L05",
+  "title": "Where Are You From?",
+  "skill_type": "speaking",
+  "position": 5,
+  "objective": "Ask and answer about country of origin with I'm from…",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you learn to ask and answer \"Where are you from?\" You will learn country names and the pattern \"I'm from ___.\"]\n{{l1_contrast:copula_be}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L03", "EN-U01-L04"],
+  "vocabulary_refs": ["name", "nice", "meet", "What's your name?", "Nice to meet you.", "I'm…", "hello"],
+  "notes": "This is the band file's fully specified sample lesson (§13a), re-expressed in authoring schema v0.1; country subset personalized by L1 region is [proposed] in the band file — the six countries here are the §13a set. TODO_audio: exercises 2, 6, 7, 8 carry the spoken line as written transcript in the prompt; audio assets not yet produced.",
+  "new_vocabulary": [
+    { "lemma": "country", "pos": "noun", "cefr_level": "A1", "example_sentence": "Mexico is a country.", "ipa": "/ˈkʌntri/", "translations": { "es": "país" } },
+    { "lemma": "Where are you from?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Where are you from? I'm from Brazil.", "ipa": "/ˌwer ər juː ˈfrʌm/", "translations": { "es": "¿De dónde eres?" } },
+    { "lemma": "I'm from…", "pos": "chunk", "cefr_level": "A1", "example_sentence": "I'm from China.", "ipa": "/aɪm frəm/", "translations": { "es": "Soy de…" } },
+    { "lemma": "Mexico", "pos": "noun", "cefr_level": "A1", "example_sentence": "She's from Mexico.", "ipa": "/ˈmeksɪkoʊ/", "translations": { "es": "México" } },
+    { "lemma": "Brazil", "pos": "noun", "cefr_level": "A1", "example_sentence": "I'm from Brazil.", "ipa": "/brəˈzɪl/", "translations": { "es": "Brasil" } },
+    { "lemma": "China", "pos": "noun", "cefr_level": "A1", "example_sentence": "I'm from China.", "ipa": "/ˈtʃaɪnə/", "translations": { "es": "China" } },
+    { "lemma": "Vietnam", "pos": "noun", "cefr_level": "A1", "example_sentence": "He's from Vietnam.", "ipa": "/ˌviːetˈnɑːm/", "translations": { "es": "Vietnam" } },
+    { "lemma": "Haiti", "pos": "noun", "cefr_level": "A1", "example_sentence": "She's from Haiti.", "ipa": "/ˈheɪti/", "translations": { "es": "Haití" } },
+    { "lemma": "Ukraine", "pos": "noun", "cefr_level": "A1", "example_sentence": "I'm from Ukraine.", "ipa": "/juːˈkreɪn/", "translations": { "es": "Ucrania" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "country · Where are you from? · I'm from… · Mexico · Brazil · China · Vietnam · Haiti · Ukraine",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 180,
+      "rationale": "Establish form-meaning link with audio before any production."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'She's from Mexico.' — [L1: Where is she from?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Comprehension of 'from + country' in connected speech.",
+      "options": [
+        { "label": "Mexico", "is_correct": true, "rationale": "Heard after 'from'." },
+        { "label": "Brazil", "is_correct": false, "rationale": "Distractor: also taught this lesson; forces listening, not guessing." },
+        { "label": "She's", "is_correct": false, "rationale": "Catches learners matching first word heard, not meaning." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the question to the answer.]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your name?", "right": "I'm Ana." },
+        { "left": "Where are you from?", "right": "I'm from Brazil." },
+        { "left": "Nice to meet you.", "right": "Nice to meet you, too." }
+      ],
+      "rationale": "Discriminates the two U1 question chunks; recycles L03 (N-2 rule)."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "A: Where ___ you from?  B: I'm ___ Brazil.",
+      "keys": ["are", "from"],
+      "distractor_bank": ["is", "am", "in", "of"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Targets copula agreement (are) and the preposition; 'in/of' catch L1 preposition transfer (es: 'de', zh: '从')."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["from", "where", "you", "are", "?"],
+      "key": "Where are you from?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Inversion practice; predicted error for zh/vi L1s is SVO order 'Where you are from?' — order feedback names the moved word."
+    },
+    {
+      "seq": 6,
+      "type": "dictation",
+      "prompt": "[audio, 2 plays: 0.75x then 1.0x] 'I'm from China.'",
+      "key": "I'm from China.",
+      "scoring": "case-insensitive; apostrophe required; 'Im' → targeted feedback on contraction",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Sound→spelling for the contraction I'm; weak-form 'from' /frəm/ exposure."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio, natural speed] 'Where're you from?' — [L1: What did you hear?]",
+      "difficulty": 0.6,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "First planned exposure to reduction; receptive only per band file §6 P6.",
+      "options": [
+        { "label": "Where are you from?", "is_correct": true, "rationale": "'Where're' is the reduced form of 'Where are'." },
+        { "label": "Where you from?", "is_correct": false, "rationale": "The 're is quiet but present — trains hearing reductions (P6 preview)." }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[audio] 'Where are you from?' → [L1: Answer with your real country.]",
+      "expected_pattern": "I'm from {country}.",
+      "asr_focus": ["presence of 'm in I'm (copula, ar/zh/vi contrast)", "from produced (weak form accepted)"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Personalized production; ASR checks copula presence — the #1 predicted error for zero-copula L1s."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: Have a short conversation: say hello, give your name, and say where you are from.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Integrates L01+L03+L05 chunks in real time; counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L05-DLG"
+    }
+  ]
+}

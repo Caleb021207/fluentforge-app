@@ -1,0 +1,225 @@
+{
+  "id": "EN-U01-L12",
+  "title": "Filling In a Form",
+  "skill_type": "reading",
+  "position": 12,
+  "objective": "Read and complete a simple personal-information form: first name, last name, country, phone number, email address.",
+  "est_minutes": 14,
+  "intro_md": "[L1: In this lesson you read and complete a simple form in English: first name, last name, country, phone number, email address. Remember: names of people, countries and languages always start with a CAPITAL letter in English.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L02", "EN-U01-L11"],
+  "vocabulary_refs": [
+    "name",
+    "country",
+    "number",
+    "phone number",
+    "What's your phone number?",
+    "What's your name?",
+    "Where are you from?",
+    "Mexico",
+    "Brazil",
+    "English",
+    "I speak…",
+    "teacher"
+  ],
+  "new_vocabulary": [
+    {
+      "lemma": "first name",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "My first name is Sara.",
+      "ipa": "/ˈfɜːrst ˌneɪm/",
+      "translations": { "es": "nombre (de pila)" }
+    },
+    {
+      "lemma": "last name",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "Her last name is Diaz.",
+      "ipa": "/ˈlæst ˌneɪm/",
+      "translations": { "es": "apellido" }
+    },
+    {
+      "lemma": "email address",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "My email address is sara@email.com.",
+      "ipa": "/ˈiːmeɪl əˌdres/",
+      "translations": { "es": "dirección de correo electrónico" }
+    },
+    {
+      "lemma": "form",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "This form is in English.",
+      "ipa": "/fɔːrm/",
+      "translations": { "es": "formulario" }
+    },
+    {
+      "lemma": "Mr",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "Mr Chen is my teacher.",
+      "ipa": "/ˈmɪstər/",
+      "translations": { "es": "Sr. (señor)" }
+    },
+    {
+      "lemma": "Ms",
+      "pos": "noun",
+      "cefr_level": "A1",
+      "example_sentence": "Ms Diaz is from Mexico.",
+      "ipa": "/mɪz/",
+      "translations": { "es": "Sra. / Srta. (señora, señorita)" }
+    }
+  ],
+  "notes": "TODO_audio: ex7 (I speak English., 1.0x), ex6 (Hello, I'm Sara Diaz, your teacher., 0.75x), ex8 dictation (2 plays), ex9 speaking model. Band map §15: L12 vocab=6. first name / last name / email address / Mr / Ms are band §4 sample items 11, 33, 34; 'form' is the lesson's core referent noun, required by the §2 objective ('complete a simple personal-information form'). married/single (band remaining-items list) were deliberately NOT used: they carry a [requires validation: cultural sensitivity] flag in §4. Form layouts below use an em dash between field label and value so proper-noun values stay mid-segment for the deterministic scanner while rendering as a normal form. KNOWN G-vocab-boundary REMAINDER (judged band-sanctioned): ex3 email literal sara@email.com tokenizes to 'sara'+'com' — an email address is named in the section-2 L12 objective and band section-4 item 33, cannot be rendered from taught lemmas alone (emails are conventionally lowercase, TLDs are not vocabulary), and format recognition of a REAL email value is the point of ex3. Domain deliberately uses taught 'email' to keep the remainder minimal.",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "first name · last name · email address · form · Mr · Ms",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 130,
+      "rationale": "Form field labels are sight vocabulary: learners must recognize them instantly on paper and screens before any completion task."
+    },
+    {
+      "seq": 2,
+      "type": "matching",
+      "prompt": "[L1: Match the spoken question to the form field.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your last name?", "right": "last name" },
+        { "left": "Where are you from?", "right": "country" },
+        { "left": "What's your phone number?", "right": "phone number" },
+        { "left": "What's your email address?", "right": "email address" }
+      ],
+      "rationale": "Intake interviews are spoken forms: mapping each known question onto its written field label is the transfer this lesson exists for."
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: What kind of information is each of these? Match it to the field.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 55,
+      "pairs": [
+        { "left": "sara@email.com", "right": "email address" },
+        { "left": "555-0192", "right": "phone number" },
+        { "left": "Mexico", "right": "country" }
+      ],
+      "rationale": "Recognizing value formats (@ and dot = email, digit groups = phone) lets learners orient on a real form even when they cannot read every label."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "Form\nFirst name — Sara\nLast name — Diaz\nCountry — Brazil\nPhone number — 555-0192\n\nShe is from ___. Her ___ name is Diaz.",
+      "keys": ["Brazil", "last"],
+      "distractor_bank": ["Mexico", "first"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 70,
+      "rationale": "Reading a filled form and extracting facts from it; the first/last distractor pair targets the field-label confusion es speakers carry from nombre/apellido order differences."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order to ask for the missing field.]",
+      "tokens": ["last", "is", "name", "what", "your", "?"],
+      "key": "What is your last name?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Learners completing a form for someone else must ask this; extends the L10 WH-frame with the new field vocabulary."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'Hello, I'm Sara Diaz, your teacher.' — [L1: What do you call her?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 45,
+      "rationale": "Band §4 pragmatics note for Mr/Ms verbatim: titles go with the LAST name; this is a high-frequency politeness error in school and intake settings.",
+      "options": [
+        {
+          "label": "Ms Diaz.",
+          "is_correct": true,
+          "rationale": "Title + last name: Ms works for any adult woman, married or not."
+        },
+        {
+          "label": "Ms Sara.",
+          "is_correct": false,
+          "rationale": "Title + first name — the most common ESL transfer (common politeness pattern in es/ar/vi contexts, but not standard English)."
+        },
+        {
+          "label": "Teacher Sara.",
+          "is_correct": false,
+          "rationale": "Occupation used as a title — direct transfer from classroom cultures where 'Teacher' is a form of address."
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'I speak English.' — [L1: Which is the correct WRITTEN form of what you hear?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Capitalization of proper nouns is in the §2 objective; Spanish writes language names lowercase (inglés), so the lowercase-language error is the targeted transfer.",
+      "options": [
+        {
+          "label": "I speak English.",
+          "is_correct": true,
+          "rationale": "Language names are proper nouns in English and always take a capital letter."
+        },
+        {
+          "label": "I speak english.",
+          "is_correct": false,
+          "rationale": "Direct es transfer: Spanish writes languages lowercase (inglés, español) — English never does."
+        },
+        {
+          "label": "i speak English.",
+          "is_correct": false,
+          "rationale": "Catches losing the sentence-start capital (and lowercase i), the other capitalization rule forms are graded on."
+        }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "dictation",
+      "prompt": "[audio, 2 plays: 0.75x then 1.0x] 'My last name is Diaz.'",
+      "key": "My last name is Diaz.",
+      "scoring": "case-sensitive on Diaz: the capital D is the graded point; rest case-insensitive",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Writing a heard proper noun with its capital letter — exactly what happens when an official spells a name at a counter and the learner fills the form."
+    },
+    {
+      "seq": 9,
+      "type": "speaking",
+      "prompt": "[audio] 'What's your last name?' → [L1: Answer with your real last name, in a full sentence.]",
+      "expected_pattern": "My last name is {last_name}.",
+      "asr_focus": [
+        "full frame produced, not the bare name alone",
+        "first/last not swapped (checked against profile if available)"
+      ],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Intake officials ask exactly this; answering with the frame instead of a bare name keeps the exchange self-correcting when fields get confused."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: WRITTEN chat. The AI is a school receptionist completing a form for you. It asks your first name, last name, country, phone number and email address, one by one. Type each answer.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 150,
+      "rationale": "End-to-end rehearsal of the form-completion scenario in the written mode the §2 tag (P-written) requires; typing forces the capitalization rules ex7/ex8 taught.",
+      "ai_interaction_ref": "EN-U01-L12-DLG"
+    }
+  ]
+}

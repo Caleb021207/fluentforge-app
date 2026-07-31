@@ -1,0 +1,156 @@
+{
+  "id": "EN-U01-L09",
+  "title": "Are You…? Yes/No Questions with be",
+  "skill_type": "grammar",
+  "position": 9,
+  "objective": "Form and answer yes/no questions with be, using inversion and rising intonation.",
+  "est_minutes": 12,
+  "intro_md": "[L1: In this lesson you ask yes/no questions by moving am/is/are to the front: You are new. → Are you new? In these questions your voice goes UP at the end.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L08"],
+  "grammar_refs": ["gram.be.yn_questions_inversion"],
+  "pron_refs": ["pron.intonation.yn_rising"],
+  "vocabulary_refs": [
+    "teacher",
+    "student",
+    "class",
+    "new",
+    "good morning",
+    "Mexico",
+    "Brazil",
+    "China",
+    "English",
+    "I speak…",
+    "I'm from…"
+  ],
+  "new_vocabulary": [],
+  "notes": "TODO_audio: ex2 (statement vs question pair, 1.0x), ex6 (Is your class in the morning?, 0.75x), ex8 speaking model prompt. Band map §15 allots L09 no new vocabulary (grammar G6 only); all question apparatus is function words, content words recycled from L01-L07. Band map also places a spoken guided-qa AI interaction at L09 — ex9 is that slot.",
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "Are you…? · Is she…? · Am I…? · Yes, I am. · No, I'm not.",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 90,
+      "rationale": "Inversion presented first as three audible question frames, paired with the L08 short answers they trigger — chunks before rule."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'You're a student.' … 'Are you a student?' — [L1: Which one is the question?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "P3: question recognition from inversion plus rising melody at zero grammar cost — the perceptual foundation for everything else in the lesson.",
+      "options": [
+        {
+          "label": "Are you a student?",
+          "is_correct": true,
+          "rationale": "are moves to the front and the voice rises at the end — both signals mark the question."
+        },
+        {
+          "label": "You're a student.",
+          "is_correct": false,
+          "rationale": "Same words, statement order, falling voice: catches learners relying on words instead of order and melody."
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order to make a question.]",
+      "tokens": ["you", "are", "from", "Mexico", "?"],
+      "key": "Are you from Mexico?",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Inversion practice: zh/vi (and informal es) form questions by intonation alone, so the predicted answer is statement order 'You are from Mexico?' — feedback names the fronted are."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "___ she your teacher?",
+      "keys": ["Is"],
+      "distractor_bank": ["Are", "Am", "She's"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "Agreement must survive inversion (is with she); She's in the bank catches learners who keep statement order and only add a question mark."
+    },
+    {
+      "seq": 5,
+      "type": "matching",
+      "prompt": "[L1: Match each question to its short answer.]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Are you from Brazil?", "right": "No, I'm not." },
+        { "left": "Is he new?", "right": "Yes, he is." },
+        { "left": "Are they students?", "right": "Yes, they are." }
+      ],
+      "rationale": "Person-switching between question and answer (you→I, he→he, they→they) is where learners break; pairs cover singular, plural and negative in one screen."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'Is your class in the morning?' — [L1: Choose the correct answer.]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Short answers with it for a thing (your class) — learners default to repeating the noun or dropping the pronoun; also recycles L01 morning in a new frame.",
+      "options": [
+        {
+          "label": "Yes, it is.",
+          "is_correct": true,
+          "rationale": "it stands for your class; is echoes the question's be-form — pronoun plus full form."
+        },
+        {
+          "label": "Yes, is.",
+          "is_correct": false,
+          "rationale": "Pronoun drop (es 'Sí, es'): English short answers always need the subject pronoun."
+        },
+        {
+          "label": "Yes, it's.",
+          "is_correct": false,
+          "rationale": "Sentence-final contraction — recycles the L08 trap in the new it-frame to check the rule generalized."
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "translation",
+      "prompt": "[L1: Ask it in English: '¿Eres estudiante?']",
+      "key": "Are you a student?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Spanish questions need no inversion and no article ('¿Eres estudiante?'); the English version forces both changes at once — fronted are and a before the noun."
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[L1: Ask the AI if it is from your country. Start with Are, and make your voice go up at the end.]",
+      "expected_pattern": "Are you from {country}?",
+      "asr_focus": [
+        "rising final contour (P3 — flat or falling melody flagged)",
+        "are produced before you (no intonation-only question)"
+      ],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "Produces inversion and the rising contour together; ASR flags the intonation-only question that zh/vi/es speakers transfer."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: Guessing game. The AI is thinking of a country you know and of what it is (student or teacher). Ask only yes/no questions with Are you / Is it, then guess.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 130,
+      "rationale": "Information-checking is the band-file communicative need for G6; a guessing game makes inversion the tool, not the topic. Fills the L09 spoken guided-qa AI slot from band map §15.",
+      "ai_interaction_ref": "EN-U01-L09-DLG"
+    }
+  ]
+}

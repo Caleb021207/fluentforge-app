@@ -1,0 +1,155 @@
+{
+  "id": "EN-U01-L04",
+  "title": "Numbers 0–20",
+  "skill_type": "vocab",
+  "position": 4,
+  "objective": "Say and understand numbers 0–20 in isolation and in short utterances.",
+  "est_minutes": 14,
+  "intro_md": "[L1: In this lesson you learn the numbers from 0 to 20 — to say them, to hear them, and to read them in short sentences. The '-teen' numbers (13–19) get special attention: they are the ones people mishear most.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L03"],
+  "pron_refs": ["pron.p1.syllable_count_word_stress"],
+  "vocabulary_refs": ["name", "My name is…", "I'm…"],
+  "notes": "Band map allocates 21 vocabulary items to this lesson: the number words zero-twenty exactly (the noun 'number' itself is budgeted to L11 with phone numbers, so prompts here avoid it and use L1 instructions or digit anchors instead). TODO_audio: exercises 4, 6, 7, 8 carry the spoken line as written transcript in the prompt; audio assets not yet produced.",
+  "new_vocabulary": [
+    { "lemma": "zero", "pos": "number", "cefr_level": "A1", "example_sentence": "Zero, one, two, three.", "ipa": "/ˈzɪroʊ/", "translations": { "es": "cero" } },
+    { "lemma": "one", "pos": "number", "cefr_level": "A1", "example_sentence": "One name, one word.", "ipa": "/wʌn/", "translations": { "es": "uno" } },
+    { "lemma": "two", "pos": "number", "cefr_level": "A1", "example_sentence": "Two letters: H, I.", "ipa": "/tuː/", "translations": { "es": "dos" } },
+    { "lemma": "three", "pos": "number", "cefr_level": "A1", "example_sentence": "Three letters: B, Y, E.", "ipa": "/θriː/", "translations": { "es": "tres" } },
+    { "lemma": "four", "pos": "number", "cefr_level": "A1", "example_sentence": "Four letters: N, A, M, E.", "ipa": "/fɔːr/", "translations": { "es": "cuatro" } },
+    { "lemma": "five", "pos": "number", "cefr_level": "A1", "example_sentence": "Five, four, three, two, one.", "ipa": "/faɪv/", "translations": { "es": "cinco" } },
+    { "lemma": "six", "pos": "number", "cefr_level": "A1", "example_sentence": "Six, seven, eight.", "ipa": "/sɪks/", "translations": { "es": "seis" } },
+    { "lemma": "seven", "pos": "number", "cefr_level": "A1", "example_sentence": "Seven, not eleven.", "ipa": "/ˈsevən/", "translations": { "es": "siete" } },
+    { "lemma": "eight", "pos": "number", "cefr_level": "A1", "example_sentence": "Eight, nine, ten.", "ipa": "/eɪt/", "translations": { "es": "ocho" } },
+    { "lemma": "nine", "pos": "number", "cefr_level": "A1", "example_sentence": "Nine, ten, eleven.", "ipa": "/naɪn/", "translations": { "es": "nueve" } },
+    { "lemma": "ten", "pos": "number", "cefr_level": "A1", "example_sentence": "Ten letters, two words.", "ipa": "/ten/", "translations": { "es": "diez" } },
+    { "lemma": "eleven", "pos": "number", "cefr_level": "A1", "example_sentence": "Eleven, not seven.", "ipa": "/ɪˈlevən/", "translations": { "es": "once" } },
+    { "lemma": "twelve", "pos": "number", "cefr_level": "A1", "example_sentence": "Twelve, not twenty.", "ipa": "/twelv/", "translations": { "es": "doce" } },
+    { "lemma": "thirteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Thirteen, fourteen, fifteen.", "ipa": "/ˌθɜːrˈtiːn/", "translations": { "es": "trece" } },
+    { "lemma": "fourteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Fourteen is four plus ten.", "ipa": "/ˌfɔːrˈtiːn/", "translations": { "es": "catorce" } },
+    { "lemma": "fifteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Fifteen, sixteen, seventeen.", "ipa": "/ˌfɪfˈtiːn/", "translations": { "es": "quince" } },
+    { "lemma": "sixteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Sixteen is six plus ten.", "ipa": "/ˌsɪksˈtiːn/", "translations": { "es": "dieciséis" } },
+    { "lemma": "seventeen", "pos": "number", "cefr_level": "A1", "example_sentence": "Seventeen, eighteen, nineteen.", "ipa": "/ˌsevənˈtiːn/", "translations": { "es": "diecisiete" } },
+    { "lemma": "eighteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Eighteen is eight plus ten.", "ipa": "/ˌeɪˈtiːn/", "translations": { "es": "dieciocho" } },
+    { "lemma": "nineteen", "pos": "number", "cefr_level": "A1", "example_sentence": "Nineteen, twenty.", "ipa": "/ˌnaɪnˈtiːn/", "translations": { "es": "diecinueve" } },
+    { "lemma": "twenty", "pos": "number", "cefr_level": "A1", "example_sentence": "Twenty is two times ten.", "ipa": "/ˈtwenti/", "translations": { "es": "veinte" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "zero · one · two · three · four · five · six · seven · eight · nine · ten",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 150,
+      "rationale": "Form-meaning link for 0-10 with audio; split from the teens so each flashcard block stays within working-memory limits."
+    },
+    {
+      "seq": 2,
+      "type": "flashcard",
+      "prompt": "eleven · twelve · thirteen · fourteen · fifteen · sixteen · seventeen · eighteen · nineteen · twenty",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 150,
+      "rationale": "The teens block, where stress and the '-teen' suffix carry the meaning; sequenced second so the transparent 0-10 forms are already stable."
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the digit to the word.]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "3", "right": "three" },
+        { "left": "13", "right": "thirteen" },
+        { "left": "4", "right": "four" },
+        { "left": "14", "right": "fourteen" }
+      ],
+      "rationale": "Base form vs '-teen' form with the digit as anchor: 3/13 and 4/14 are minimal pairs in both script and sound, the exact contrast that corrupts phone numbers later (L11)."
+    },
+    {
+      "seq": 4,
+      "type": "listening_mc",
+      "prompt": "[audio] 'sixteen' — [L1: Which number do you hear?]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Syllable-count discrimination (band pron target P1): final-syllable-dropping L1s (vi, zh) hear 'six' for 'sixteen'; the third option checks vowel quality, not just length.",
+      "options": [
+        { "label": "sixteen", "is_correct": true, "rationale": "Two syllables with stress on '-teen'." },
+        { "label": "six", "is_correct": false, "rationale": "One syllable — catches listeners who drop the unstressed-looking final syllable." },
+        { "label": "fifteen", "is_correct": false, "rationale": "Same '-teen' ending; forces hearing the first syllable, not just the suffix." }
+      ]
+    },
+    {
+      "seq": 5,
+      "type": "cloze",
+      "prompt": "eight, nine, ___, eleven, ___",
+      "keys": ["ten", "twelve"],
+      "distractor_bank": ["two", "twenty"],
+      "difficulty": 0.3,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Sequence retrieval across the 10-12 boundary where es cognate support ends (once/doce are opaque); 'two/twenty' distractors attack the tw- family confusion head-on."
+    },
+    {
+      "seq": 6,
+      "type": "ordering",
+      "prompt": "[L1: Put the numbers in order, smallest first.]",
+      "tokens": ["twelve", "two", "twenty", "ten"],
+      "key": "two ten twelve twenty",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "The four tw-/t- lookalikes in one task: ordering by magnitude forces retrieving each meaning, not pattern-matching the shared onset."
+    },
+    {
+      "seq": 7,
+      "type": "dictation",
+      "prompt": "[audio, 2 plays: 0.75x then 1.0x] 'eleven'",
+      "key": "eleven",
+      "scoring": "case-insensitive; 'seven' scored as mishearing with targeted feedback on the initial unstressed syllable",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 55,
+      "rationale": "Sound-to-spelling for the eleven/seven rhyme pair: the unstressed initial /ɪ/ is exactly what es ears delete; writing it forces hearing it."
+    },
+    {
+      "seq": 8,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Hi! My name is Ana. I'm eleven.' — [L1: Which number do you hear?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Numbers in a short utterance (the objective's second half): the target sits after the known frame 'I'm', training learners to catch numbers inside running speech.",
+      "options": [
+        { "label": "eleven", "is_correct": true, "rationale": "Heard after 'I'm' — three syllables, stress on -le-." },
+        { "label": "seven", "is_correct": false, "rationale": "Rhymes with eleven; catches listeners who miss the unstressed first syllable in connected speech." },
+        { "label": "ten", "is_correct": false, "rationale": "Shares the /en/ ending only — checks the learner is not matching final sounds alone." }
+      ]
+    },
+    {
+      "seq": 9,
+      "type": "cloze",
+      "prompt": "sixteen, seventeen, ___, nineteen, ___",
+      "keys": ["eighteen", "twenty"],
+      "distractor_bank": ["eight", "twelve"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Upper-teens sequence including the exit to twenty; 'eight' catches the base/-teen confusion in production, mirroring ex 4's receptive version."
+    },
+    {
+      "seq": 10,
+      "type": "speaking",
+      "prompt": "[L1: Count aloud from zero to ten.]",
+      "expected_pattern": "zero one two three four five six seven eight nine ten",
+      "asr_focus": ["all eleven numbers present and in order", "seven produced with two syllables (P1)", "three not reduced to /triː/ (noted, not failed — /θ/ is a U3 target)"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Serial production to automatize the 0-10 core; counting is the retrieval structure learners actually use when they need a number in the wild."
+    }
+  ]
+}

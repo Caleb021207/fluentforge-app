@@ -1,0 +1,141 @@
+{
+  "id": "EN-U01-L18",
+  "title": "Unit 1 Review + Mission: Three Introductions",
+  "skill_type": "speaking",
+  "position": 18,
+  "objective": "Review Unit 1, then introduce yourself to three AI characters with the right formality.",
+  "est_minutes": 16,
+  "intro_md": "[L1: The last lesson of Unit 1! First, a short review of everything: greetings, names, countries, jobs, numbers, polite phrases. Then your mission — introduce yourself to three different people: a teacher, a student like you, and an office worker. Each one needs different words. Formal: Good morning + Ms/Mr and a last name. Friendly: Hi! and first names. Your repair phrases are always allowed — using them is part of a good score.]\n{{l1_contrast:register_formality}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L15", "EN-U01-L17"],
+  "vocabulary_refs": ["hello", "hi", "good morning", "name", "My name is…", "I'm…", "What's your name?", "Where are you from?", "I'm from…", "country", "What do you do?", "engineer", "driver", "artist", "spell", "How do you spell that?", "Sorry?", "Can you repeat that, please?", "I don't understand.", "see you later", "phone number"],
+  "notes": "TODO_audio: exercise 6 needs recorded audio; the quoted text stands in for the recording. Review half (ex 1-8) samples every vocab lesson of the unit per the layered-review rules (unit cumulative review, L18 first half); mission half (ex 9-11) is the band's Three Introductions mission (teacher / peer / office clerk register variants). Mission contract EN-U01-L18-M01A/B/C to be authored as ai_interaction_specs when that table lands.",
+  "new_vocabulary": [],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "hello · good morning · What's your name? · Where are you from? · What do you do? · Can you repeat that, please? · Nice to meet you. · see you later",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 150,
+      "rationale": "Retrieval sweep across all six vocab lessons of the unit before the performance; the result feeds the per-skill mastery snapshot the unit review must generate."
+    },
+    {
+      "seq": 2,
+      "type": "matching",
+      "prompt": "[L1: Formal or friendly? Match each greeting to the right situation.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Good morning, Ms Lee.", "right": "[L1: formal — a teacher or an office]" },
+        { "left": "Hi! I'm Sam.", "right": "[L1: friendly — another student]" },
+        { "left": "Hello.", "right": "[L1: neutral — works everywhere]" }
+      ],
+      "rationale": "Register choice is the scored dimension of the mission (L01 culture note: hi vs good morning); the three-way sort maps one greeting to each of the three mission characters."
+    },
+    {
+      "seq": 3,
+      "type": "cloze",
+      "prompt": "A: ___ you from Mexico?  B: Yes, I ___.",
+      "keys": ["Are", "am"],
+      "distractor_bank": ["Is", "Do"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "L07-L09 be review under mixed conditions; 'Do' catches the predicted overgeneralization from L13's What do you do? back onto be-questions."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "She's ___ engineer. He's ___ driver.",
+      "keys": ["an", "a"],
+      "distractor_bank": ["the"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "G4 spot-check with the vowel/consonant pair from L13; article drop before jobs remains the top predicted es/zh error and must survive a week of new material."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order. You will need this question in your mission.]",
+      "tokens": ["do", "how", "spell", "you", "that", "?"],
+      "key": "How do you spell that?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "Re-assembles the L15 repair chunk the office-clerk mission will demand; also reviews do-question word order as a fixed shape before U2 analyzes it."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'My phone number is five-five-five, two-zero-one-four.' — [L1: Which numbers do you hear at the end?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 45,
+      "rationale": "Numbers decay fastest under FSRS; digit-by-digit phone exchange (L11) returns in the office-clerk mission, so the grouping-pause listening skill gets one last activation.",
+      "options": [
+        { "label": "two-zero-one-four", "is_correct": true, "rationale": "Digit by digit with grouping pauses — the pause marks where the group starts." },
+        { "label": "two-zero-four-one", "is_correct": false, "rationale": "Last two digits flipped — order inside the group matters." },
+        { "label": "two-one-zero-four", "is_correct": false, "rationale": "Middle digits swapped; the grouping pauses tell you where each number sits." }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "cloze",
+      "prompt": "[L1: Complete your introduction.] Hello! My ___ is Dana. I'm ___ Ukraine. I'm ___ artist.",
+      "keys": ["name", "from", "an"],
+      "distractor_bank": ["job", "country", "a"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "The three self-introduction frames (name / origin / job) assembled into the mission's core move; 'a artist' re-tests a/an under load and the frame distractors catch word-for-word template errors."
+    },
+    {
+      "seq": 8,
+      "type": "matching",
+      "prompt": "[L1: Your last check before the mission: what does each phrase do?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 45,
+      "pairs": [
+        { "left": "Sorry?", "right": "[L1: say it again, please]" },
+        { "left": "How do you spell that?", "right": "[L1: tell me the letters]" },
+        { "left": "I don't understand.", "right": "[L1: the meaning is not clear to me]" }
+      ],
+      "rationale": "Final activation of the repair moves minutes before they are needed; in the mission they are always permitted and using them scores positively (band repair-first design)."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: MISSION 1 of 3 — your new teacher. Greet formally (Good morning + Ms or Mr), give your full name, spell your last name, and say where you are from.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Formal register variant of the mission; spelling aloud recycles L02 under pressure; scored on register match plus task completion per the mission contract.",
+      "ai_interaction_ref": "EN-U01-L18-M01A"
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: MISSION 2 of 3 — a student in your class. Greet like a friend, ask their name and country, answer their questions, and close with See you later.]",
+      "difficulty": 0.65,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Informal register variant; the learner initiates the questions (role balance trained in L17), shifting from answering to leading the exchange.",
+      "ai_interaction_ref": "EN-U01-L18-M01B"
+    },
+    {
+      "seq": 11,
+      "type": "dialogue",
+      "prompt": "[L1: MISSION 3 of 3 — an office worker needs your information for a form. Answer: name, spelling, country, phone number. The worker talks fast — use your repair phrases.]",
+      "difficulty": 0.7,
+      "receptive_productive": "productive",
+      "timing_s": 150,
+      "rationale": "Transactional register variant closing the unit: recycles L11 phone numbers and L12 form fields orally, and the deliberately fast speech makes repair use observable and scoreable.",
+      "ai_interaction_ref": "EN-U01-L18-M01C"
+    }
+  ]
+}

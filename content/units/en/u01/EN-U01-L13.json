@@ -1,0 +1,147 @@
+{
+  "id": "EN-U01-L13",
+  "title": "Jobs",
+  "skill_type": "vocab",
+  "position": 13,
+  "objective": "Say your job with I'm a… / I'm an… and ask What do you do?",
+  "est_minutes": 13,
+  "intro_md": "[L1: In this lesson you learn ten job words. You say your job with \"I'm a…\" or \"I'm an…\" (an before a vowel sound: an engineer, an artist). You also learn the question \"What do you do?\" — learn it as one piece; the grammar comes later. In English-speaking countries this question is normal, friendly small talk — it is not rude.]\n{{l1_contrast:article_a_an_jobs}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L07"],
+  "grammar_refs": ["gram.articles.a_an"],
+  "vocabulary_refs": ["name", "What's your name?", "I'm…", "Where are you from?", "I'm from…", "hello"],
+  "notes": "TODO_audio: exercises 2 and 6 need recorded audio; the quoted text in the prompt stands in for the recording. Flashcards (exercise 1) need audio fronts per the L05 exemplar.",
+  "new_vocabulary": [
+    { "lemma": "job", "pos": "noun", "cefr_level": "A1", "example_sentence": "What is your job?", "ipa": "/dʒɑːb/", "translations": { "es": "trabajo, empleo" } },
+    { "lemma": "What do you do?", "pos": "chunk", "cefr_level": "A1", "example_sentence": "What do you do? — I'm a cook.", "ipa": "/wʌt də ju ˈduː/", "translations": { "es": "¿A qué te dedicas? / ¿En qué trabajas?" } },
+    { "lemma": "doctor", "pos": "noun", "cefr_level": "A1", "example_sentence": "She's a doctor.", "ipa": "/ˈdɑːktɚ/", "translations": { "es": "médico / médica" } },
+    { "lemma": "nurse", "pos": "noun", "cefr_level": "A1", "example_sentence": "He's a nurse.", "ipa": "/nɝːs/", "translations": { "es": "enfermero / enfermera" } },
+    { "lemma": "cook", "pos": "noun", "cefr_level": "A1", "example_sentence": "I'm a cook.", "ipa": "/kʊk/", "translations": { "es": "cocinero / cocinera" } },
+    { "lemma": "driver", "pos": "noun", "cefr_level": "A1", "example_sentence": "Ben is a driver.", "ipa": "/ˈdraɪvɚ/", "translations": { "es": "conductor / conductora" } },
+    { "lemma": "waiter", "pos": "noun", "cefr_level": "A1", "example_sentence": "He's a waiter.", "ipa": "/ˈweɪtɚ/", "translations": { "es": "mesero / camarero" } },
+    { "lemma": "engineer", "pos": "noun", "cefr_level": "A1", "example_sentence": "She's an engineer.", "ipa": "/ˌɛndʒəˈnɪr/", "translations": { "es": "ingeniero / ingeniera" } },
+    { "lemma": "artist", "pos": "noun", "cefr_level": "A1", "example_sentence": "I'm an artist.", "ipa": "/ˈɑːrtɪst/", "translations": { "es": "artista" } },
+    { "lemma": "police officer", "pos": "noun", "cefr_level": "A1", "example_sentence": "Ana is a police officer.", "ipa": "/pəˈliːs ˈɑːfɪsɚ/", "translations": { "es": "policía (agente de policía)" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "job · What do you do? · doctor · nurse · cook · driver · waiter · engineer · artist · police officer",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 180,
+      "rationale": "Establish form-meaning link for the ten job items with audio before any production; FSRS flips direction on second exposure."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'She's a doctor.' — [L1: What is her job?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Word-level comprehension of the job after 'a'; distractors force listening to the word, not guessing from topic.",
+      "options": [
+        { "label": "doctor", "is_correct": true, "rationale": "Heard after 'a' — the job slot in the I'm-a frame." },
+        { "label": "nurse", "is_correct": false, "rationale": "Same medical association; catches topic-guessing instead of word-level listening." },
+        { "label": "waiter", "is_correct": false, "rationale": "Ends in the same unstressed -er; catches suffix-only listening." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match the job to the sentence. Look at the small word before the job.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "cook", "right": "I'm a cook." },
+        { "left": "engineer", "right": "I'm an engineer." },
+        { "left": "nurse", "right": "I'm a nurse." },
+        { "left": "artist", "right": "I'm an artist." }
+      ],
+      "rationale": "Receptive noticing of a vs an sorted by first sound (vowel-initial engineer/artist vs consonant-initial cook/nurse) before the rule is produced."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "A: What do you do?  B: I'm ___ engineer.",
+      "keys": ["an"],
+      "distractor_bank": ["a", "the"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "First forced a/an choice before a vowel sound; 'the' catches overgeneralized definite article from L1s with one default article."
+    },
+    {
+      "seq": 5,
+      "type": "cloze",
+      "prompt": "I'm ___ cook. She's ___ artist.",
+      "keys": ["a", "an"],
+      "distractor_bank": ["the"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "Minimal contrast pair in one item: the same learner must switch a → an on sound, not memorize per word."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'I'm a doctor.' — [L1: What do you hear?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "The article is a weak /ə/ and nearly inaudible; perceiving it targets article drop, the top predicted transfer error (es 'Soy médico', zh/ar no article).",
+      "options": [
+        { "label": "I'm a doctor.", "is_correct": true, "rationale": "The small word 'a' is there — English always needs it before a job." },
+        { "label": "I'm doctor.", "is_correct": false, "rationale": "Missing 'a'. Direct transfer from article-less frames (es 'Soy médico'); English requires the article." }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["what", "do", "you", "do", "?"],
+      "key": "What do you do?",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "The chunk contains 'do' twice, which confuses beginners; ordering forces noticing the fixed question shape. Predicted in-situ error: 'You do what?' (zh/vi transfer)."
+    },
+    {
+      "seq": 8,
+      "type": "cloze",
+      "prompt": "A: What ___ you do?  B: I'm ___ waiter.",
+      "keys": ["do", "a"],
+      "distractor_bank": ["are", "an", "the"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "'are' catches the predicted blend with six lessons of be-questions ('What are you do?'); second blank re-tests the article under dialogue load."
+    },
+    {
+      "seq": 9,
+      "type": "matching",
+      "prompt": "[L1: Match the question to the answer.]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your name?", "right": "I'm Ana." },
+        { "left": "Where are you from?", "right": "I'm from Mexico." },
+        { "left": "What do you do?", "right": "I'm a driver." }
+      ],
+      "rationale": "All three personal-info questions the learner must field in L17/L18; discriminating them matters because every answer starts with I'm. Recycles L03 and L05 (N-2 rule)."
+    },
+    {
+      "seq": 10,
+      "type": "dialogue",
+      "prompt": "[L1: Talk with the AI: say hello, give your name, say your job. Then ask the AI: What do you do?]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 120,
+      "rationale": "Integrates L01+L03 chunks with today's job frame in real time; the learner also asks the question (initiative), rehearsing the L17 dialogue role. Counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L13-DLG"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "EN-U01",
+  "title": "Introducing Yourself",
+  "theme": "identity and introductions",
+  "position": 1,
+  "cefr_level": "A1",
+  "can_do_statement": "Greet, introduce self, spell name, exchange basic personal information.",
+  "band_ratios": { "structured": 0.78, "guided": 0.22, "open": 0.0 },
+  "vocab_budget": 110,
+  "course": {
+    "course_key": "en-esl-a0-a2",
+    "language": "en",
+    "target_framework": "CEFR",
+    "level_band": "A0-A2",
+    "title": "English for Multilingual Learners (A0 → strong A2)"
+  },
+  "lessons": [
+    "EN-U01-L01.json",
+    "EN-U01-L02.json",
+    "EN-U01-L03.json",
+    "EN-U01-L04.json",
+    "EN-U01-L05.json",
+    "EN-U01-L06.json",
+    "EN-U01-L07.json",
+    "EN-U01-L08.json",
+    "EN-U01-L09.json",
+    "EN-U01-L10.json",
+    "EN-U01-L11.json",
+    "EN-U01-L12.json",
+    "EN-U01-L13.json",
+    "EN-U01-L14.json",
+    "EN-U01-L15.json",
+    "EN-U01-L16.json",
+    "EN-U01-L17.json",
+    "EN-U01-L18.json"
+  ],
+  "notes": "Manifest created by workstream 0.7c (slice validation) — lesson files were authored by 0.7b without a unit.json. Values mirror tests/server-pure/contentPipeline.test.ts MANIFEST fixture and wip-curriculum-en-early-a1.md §15 (U1: vocab_count 110, ratios 0.78/0.22/0.0)."
+}

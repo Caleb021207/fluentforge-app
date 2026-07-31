@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "palavox/authoring-schema/v0.1/unit",
+  "title": "Palavox unit manifest (schema v0.1)",
+  "description": "One unit.json per unit directory. Lists the lesson files in learning order (the order defines the cumulative vocabulary boundary for G-vocab-boundary) and carries the unit metadata the seed generator writes to public.courses/public.units.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "position",
+    "cefr_level",
+    "can_do_statement",
+    "band_ratios",
+    "vocab_budget",
+    "course",
+    "lessons"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^EN-U[0-9]{2}$",
+      "description": "Unit natural key, e.g. EN-U01."
+    },
+    "title": { "type": "string", "minLength": 3, "maxLength": 120 },
+    "theme": { "type": "string", "maxLength": 200 },
+    "position": { "type": "integer", "minimum": 1 },
+    "cefr_level": { "enum": ["A1", "A2", "B1", "B2"] },
+    "can_do_statement": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 400,
+      "description": "Unit-level can-do (maps to public.units.can_do_statement)."
+    },
+    "band_ratios": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["structured", "guided", "open"],
+      "properties": {
+        "structured": { "type": "number", "minimum": 0, "maximum": 1 },
+        "guided": { "type": "number", "minimum": 0, "maximum": 1 },
+        "open": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "description": "Band time-mix targets (early A1: 0.78/0.22/0.0 per band file section 15). Authoring metadata; validator checks they sum to ~1."
+    },
+    "vocab_budget": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 400,
+      "description": "Maximum total new_vocabulary items across all lessons in the unit (G-counts). Band map gives U1=110."
+    },
+    "course": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["course_key", "language", "target_framework", "level_band", "title"],
+      "properties": {
+        "course_key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{2,60}$",
+          "description": "Stable natural key for the course row's deterministic UUID, e.g. en-esl-a0-a2."
+        },
+        "language": { "enum": ["en", "es"] },
+        "target_framework": { "enum": ["CEFR", "WIDA"] },
+        "level_band": { "type": "string", "minLength": 2, "maxLength": 20 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^EN-U[0-9]{2}-L[0-9]{2}\\.json$" },
+      "description": "Lesson file names in learning order. Order is load-bearing: it defines lesson positions and the cumulative allowed-lemma boundary."
+    },
+    "notes": { "type": "string", "maxLength": 2000 }
+  }
+}

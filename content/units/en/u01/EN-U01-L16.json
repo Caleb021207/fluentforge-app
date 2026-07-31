@@ -1,0 +1,136 @@
+{
+  "id": "EN-U01-L16",
+  "title": "Sound Lab 1: ship vs sheep, question melody",
+  "skill_type": "listening",
+  "position": 16,
+  "objective": "Hear and produce short i vs long ee, and rising vs falling question melody.",
+  "est_minutes": 10,
+  "intro_md": "[L1: English has two different vowel sounds that many languages write the same way: the short, quick i in \"this\" and \"six\", and the long ee in \"see\" and \"three\". Whole words change meaning with this one sound — like \"ship\" (a boat) and \"sheep\" (the animal). Today you train your ear with words you already know. You also train question melody: yes/no questions go UP at the end; questions with What and Where go DOWN. The melody tells your listener what kind of answer you want.]\n{{l1_contrast:vowel_short_i_vs_long_ee}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L09", "EN-U01-L10"],
+  "pron_refs": ["pron.p2.short_i_vs_long_ee", "pron.p3.question_melody"],
+  "vocabulary_refs": ["three", "six", "fifteen", "English", "please", "Sorry?", "I'm sorry.", "Where are you from?", "Do you speak English?", "What's your name?", "I'm from…"],
+  "notes": "TODO_audio: every exercise in this lesson needs recorded audio (1, 2 as model audio per word, 3, 4, 5, 9 as quoted prompts); written prompts stand in for the recordings. Exercises 7-8 need ASR with pitch-contour scoring. No new vocabulary by design (band map allocates 0 to L16); all material recycles taught words.",
+  "new_vocabulary": [],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'this' … 'these' — [L1: Are the two words the same or different?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 30,
+      "rationale": "AX same/different discrimination is the entry task of perception-first pronunciation work; this/these is a real minimal pair built from words the learner already reads.",
+      "options": [
+        { "label": "[L1: different]", "is_correct": true, "rationale": "'this' has the short i, 'these' has the long ee — one sound, two words." },
+        { "label": "[L1: the same]", "is_correct": false, "rationale": "If they sounded the same, the vowel length difference is not registering yet — replay at 0.75x." }
+      ]
+    },
+    {
+      "seq": 2,
+      "type": "matching",
+      "prompt": "[L1: Listen to each word. Put it in the short-i group or the long-ee group.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "six", "right": "[L1: short i]" },
+        { "left": "this", "right": "[L1: short i (again)]" },
+        { "left": "English", "right": "[L1: short i — the first sound]" },
+        { "left": "three", "right": "[L1: long ee]" },
+        { "left": "meet", "right": "[L1: long ee (again)]" },
+        { "left": "please", "right": "[L1: long ee — in the middle]" }
+      ],
+      "rationale": "Categorizing known words by vowel builds the two sound boxes before new contrasts arrive; es has only one tense /i/, so the short lax i does not exist for es speakers — sorting makes it audible."
+    },
+    {
+      "seq": 3,
+      "type": "listening_mc",
+      "prompt": "[audio, 0.75x] 'fifteen' — [L1: Which part of the word is long?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "One word containing BOTH target sounds; hearing fif- (short) vs -teen (long) also prepares the fifteen/fifty distinction that phone numbers (L11) depend on.",
+      "options": [
+        { "label": "[L1: the end: -teen]", "is_correct": true, "rationale": "-teen has the long ee — that length is why -teen numbers are easy to hear." },
+        { "label": "[L1: the start: fif-]", "is_correct": false, "rationale": "fif- has the short, quick i — if it sounded long, the two boxes are swapped." }
+      ]
+    },
+    {
+      "seq": 4,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Are you from Mexico?' — [L1: Does the voice go UP or DOWN at the end?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Yes/no melody made explicit after L09 met it implicitly; melody signals question type before the words are parsed (pron target P3).",
+      "options": [
+        { "label": "[L1: UP]", "is_correct": true, "rationale": "Yes/no questions rise at the end — the rise says: answer yes or no." },
+        { "label": "[L1: DOWN]", "is_correct": false, "rationale": "Falling melody belongs to What/Where questions and statements." }
+      ]
+    },
+    {
+      "seq": 5,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Where are you from?' — [L1: Does the voice go UP or DOWN at the end?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Minimal melody contrast with the previous item; es and zh speakers often rise on ALL questions, so the WH-fall is the trained direction.",
+      "options": [
+        { "label": "[L1: DOWN]", "is_correct": true, "rationale": "What/Where questions fall — the question word already marks the question." },
+        { "label": "[L1: UP]", "is_correct": false, "rationale": "Rising every question is the predicted transfer habit — WH-questions fall." }
+      ]
+    },
+    {
+      "seq": 6,
+      "type": "matching",
+      "prompt": "[L1: UP or DOWN? Match each question to its melody.]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Are you from Brazil?", "right": "[L1: UP]" },
+        { "left": "Do you speak English?", "right": "[L1: UP (again)]" },
+        { "left": "Where are you from?", "right": "[L1: DOWN]" },
+        { "left": "What's your name?", "right": "[L1: DOWN (again)]" }
+      ],
+      "rationale": "Applies the rise/fall rule across the unit's four real questions — the same four the learner must produce in the L17 dialogue."
+    },
+    {
+      "seq": 7,
+      "type": "speaking",
+      "prompt": "[L1: Ask this question out loud. Make your voice go UP at the end:] Are you from Mexico?",
+      "expected_pattern": "Are you from Mexico?",
+      "asr_focus": ["rising final contour on the last word", "copula 'are' present at the start"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Production only after perception (perception-first rule); the words are all known, so all attention goes to the rising contour."
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[L1: Now ask this question with your voice going DOWN at the end:] Where are you from?",
+      "expected_pattern": "Where are you from?",
+      "asr_focus": ["falling final contour", "'from' produced (weak form accepted)"],
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Contrast pair with the previous item: same voice, opposite contour — the down-melody is the counter-habit move for learners who rise on every question."
+    },
+    {
+      "seq": 9,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Sorry?' — [L1: UP or DOWN?]",
+      "difficulty": 0.6,
+      "receptive_productive": "receptive",
+      "timing_s": 30,
+      "rationale": "The unit's clearest minimal melody pair: rising Sorry? (repair, L15) vs falling I'm sorry (apology) — melody alone decides the meaning.",
+      "options": [
+        { "label": "[L1: UP — say it again, please]", "is_correct": true, "rationale": "Rising Sorry? asks for repetition, exactly as taught in L15." },
+        { "label": "[L1: DOWN — I apologize]", "is_correct": false, "rationale": "The falling version is the apology 'I'm sorry.' — a different move." }
+      ]
+    }
+  ]
+}

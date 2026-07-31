@@ -1,0 +1,122 @@
+{
+  "id": "EN-U01-L17",
+  "title": "Meet a New Classmate",
+  "skill_type": "speaking",
+  "position": 17,
+  "objective": "Hold a 6-8 turn introduction conversation: greet, names, origin, job, close.",
+  "est_minutes": 15,
+  "intro_md": "[L1: Today you put Unit 1 together: you meet a new classmate. First you rebuild the conversation in parts — greet, names, where from, jobs, goodbye. Then you do it for real with the AI, first in writing at your own speed, then speaking, 6-8 turns. If you don't understand something, use Sorry? or Can you repeat that, please? — that is always good English and it counts in your favor.]",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L15", "EN-U01-L16"],
+  "vocabulary_refs": ["hello", "hi", "see you later", "Nice to meet you.", "name", "My name is…", "I'm…", "What's your name?", "country", "Where are you from?", "I'm from…", "Do you speak English?", "What do you do?", "job", "driver", "nurse", "waiter", "Sorry?", "Can you repeat that, please?"],
+  "notes": "TODO_audio: exercise 6 needs recorded audio; the quoted text stands in for the recording. Integration lesson — band map allocates 0 new vocabulary; everything recycles L01-L15. Written interaction (ex 8) precedes the spoken one (ex 9) per the band's structured-to-guided progression.",
+  "new_vocabulary": [],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "hello · What's your name? · Where are you from? · What do you do? · Nice to meet you. · see you later",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 120,
+      "rationale": "Retrieval sweep of the five conversational moves before assembly — FSRS retrieval right before use maximizes the dialogue's success rate."
+    },
+    {
+      "seq": 2,
+      "type": "matching",
+      "prompt": "[L1: Every conversation has parts. Match each sentence to its job in the conversation.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Hello! I'm Sara.", "right": "[L1: opening: greet and give your name]" },
+        { "left": "Where are you from?", "right": "[L1: middle: ask about their country]" },
+        { "left": "What do you do?", "right": "[L1: middle: ask about their job]" },
+        { "left": "See you later!", "right": "[L1: closing: say goodbye]" }
+      ],
+      "rationale": "Names the functional skeleton (greet, ask, answer, close) so the later dialogue is a plan the learner executes, not a memory test."
+    },
+    {
+      "seq": 3,
+      "type": "ordering",
+      "prompt": "[L1: Put the four lines in order to build the opening of the conversation.]",
+      "tokens": ["Hello! I'm Dan.", "Hi! My name is Eva.", "Nice to meet you.", "Nice to meet you, too."],
+      "key": "Hello! I'm Dan. Hi! My name is Eva. Nice to meet you. Nice to meet you, too.",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "Sequencing adjacency pairs (greeting answers greeting, name answers name, Nice-to-meet-you gets a too) — conversation structure, not sentence grammar, is the target."
+    },
+    {
+      "seq": 4,
+      "type": "matching",
+      "prompt": "[L1: Match each question to a good answer.]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "What's your name?", "right": "My name is Omar." },
+        { "left": "Where are you from?", "right": "I'm from Brazil." },
+        { "left": "What do you do?", "right": "I'm a waiter." },
+        { "left": "Do you speak English?", "right": "Yes, I do!" }
+      ],
+      "rationale": "The four question chunks are the learner's whole turn inventory; answering the wrong frame (giving a job for an origin question) is the most common breakdown in the live dialogue."
+    },
+    {
+      "seq": 5,
+      "type": "cloze",
+      "prompt": "A: Hi! I'm Leo. What's your ___?  B: My name is Ana.  A: Where are you ___?  B: I'm from Mexico. What do you ___?  A: I'm a driver.",
+      "keys": ["name", "from", "do"],
+      "distractor_bank": ["job", "country", "speak"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 75,
+      "rationale": "The full model script with its frame words removed — completing it is controlled dialogue completion in miniature (the band's written U1 interaction type); distractors are the word-for-word template errors ('Where are you country?')."
+    },
+    {
+      "seq": 6,
+      "type": "listening_mc",
+      "prompt": "[audio, 1.0x] 'Hi! I'm Nina. I'm from Brazil. I'm a nurse.' — [L1: What is her job?]",
+      "difficulty": 0.5,
+      "receptive_productive": "receptive",
+      "timing_s": 45,
+      "rationale": "Three I'm-sentences in a row do three different things (name, origin, job); listeners must track which frame carries the answer, not just catch I'm.",
+      "options": [
+        { "label": "She's a nurse.", "is_correct": true, "rationale": "After 'I'm a' comes the job — the third frame answers the question." },
+        { "label": "She's from Brazil.", "is_correct": false, "rationale": "That is her country: 'I'm from' is the origin frame, not the job frame." },
+        { "label": "Her name is Nina.", "is_correct": false, "rationale": "That is the name frame — plain 'I'm' plus a name, no 'a', no 'from'." }
+      ]
+    },
+    {
+      "seq": 7,
+      "type": "cloze",
+      "prompt": "A: I'm from Vancouver.  B: ___? Can you repeat that, please?",
+      "keys": ["Sorry"],
+      "distractor_bank": ["Please", "Thank you"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Inserts the L15 repair move into the introduction script exactly where it will be needed live; repair is an always-permitted, positively scored move in the next two exercises."
+    },
+    {
+      "seq": 8,
+      "type": "dialogue",
+      "prompt": "[L1: Written chat, your speed. The AI classmate writes a greeting and questions. Answer in full sentences — then ask the same question back.]",
+      "difficulty": 0.6,
+      "receptive_productive": "productive",
+      "timing_s": 150,
+      "rationale": "Controlled written completion before real-time speech (band progression: controlled dialogue completion precedes guided Q&A); asking the question back trains initiative, the skill that separates L17 from every earlier dialogue.",
+      "ai_interaction_ref": "EN-U01-L17-CHAT"
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: Now speak. Meet your new AI classmate: 6-8 turns. Greet, exchange names, say where you are from, ask about jobs, and close the conversation. Use your repair phrases any time you need them.]",
+      "difficulty": 0.7,
+      "receptive_productive": "productive",
+      "timing_s": 180,
+      "rationale": "The lesson's target performance: scripted-then-flexed integration of L01/L03/L05/L06/L13 chunks in real time, sustaining 6-8 turns; counts toward guided-interaction minutes and rehearses the L18 mission.",
+      "ai_interaction_ref": "EN-U01-L17-DLG"
+    }
+  ]
+}

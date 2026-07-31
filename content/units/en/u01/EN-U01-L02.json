@@ -1,0 +1,119 @@
+{
+  "id": "EN-U01-L02",
+  "title": "The Alphabet and Spelling",
+  "skill_type": "reading",
+  "position": 2,
+  "objective": "Name English letters, decode simple words, and spell your own name aloud.",
+  "est_minutes": 9,
+  "intro_md": "[L1: In this lesson you learn the names of the English letters so you can spell your name aloud and understand spelled words. Careful: English letter NAMES are not the same as their sounds, and several names are different from the letters you may know.]\n{{l1_contrast:letter_names_vs_sounds}}",
+  "status": "draft",
+  "prerequisites": ["EN-U01-L01"],
+  "pron_refs": ["pron.p4.letter_names_vs_sounds"],
+  "vocabulary_refs": ["hello", "bye"],
+  "notes": "Band file marks this lesson test_out: latin_script_l1 — Latin-script L1 learners may test out of the decoding half; the spelling-aloud half (ex 5-8) stays for everyone because letter NAMES differ even for Latin-script L1s. TODO_audio: exercises 2, 3, 5, 7 and the speaking model in ex 8 carry the spoken material as written transcript in the prompt; audio assets not yet produced.",
+  "new_vocabulary": [
+    { "lemma": "letter", "pos": "noun", "cefr_level": "A1", "example_sentence": "B is a letter.", "ipa": "/ˈletər/", "translations": { "es": "letra" } },
+    { "lemma": "word", "pos": "noun", "cefr_level": "A1", "example_sentence": "'Hello' is a word.", "ipa": "/wɜːrd/", "translations": { "es": "palabra" } },
+    { "lemma": "name", "pos": "noun", "cefr_level": "A1", "example_sentence": "My name is Ana.", "ipa": "/neɪm/", "translations": { "es": "nombre" } },
+    { "lemma": "spell", "pos": "verb", "cefr_level": "A1", "example_sentence": "Spell your name: A-N-A.", "ipa": "/spel/", "translations": { "es": "deletrear" } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "letter · word · name · spell",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 120,
+      "rationale": "Anchor the four metalanguage items first so every later instruction line ('spell the word') is comprehensible input, not noise."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio] 'E' — [L1: Which letter do you hear?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "E/I is the highest-stakes letter-name confusion for es (and pt) L1s: the English name of E is the sound es speakers write as 'i'. Getting this wrong corrupts every spelled name.",
+      "options": [
+        { "label": "E", "is_correct": true, "rationale": "English E is named /iː/ — like the es letter 'i'." },
+        { "label": "I", "is_correct": false, "rationale": "es transfer: learners map the /iː/ sound to their letter 'i'. English I is named /aɪ/." },
+        { "label": "A", "is_correct": false, "rationale": "English A is named /eɪ/, which es ears parse as 'ei' — the second member of the same confusion triangle." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "listening_mc",
+      "prompt": "[audio] 'G' — [L1: Which letter do you hear?]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "G/J is the second classic letter-name trap (band pron target P4): both names contain /dʒ/, and the es names of g/j invert the mapping.",
+      "options": [
+        { "label": "G", "is_correct": true, "rationale": "Named /dʒiː/ — consonant /dʒ/ + the E-vowel from ex 2." },
+        { "label": "J", "is_correct": false, "rationale": "Named /dʒeɪ/ — same consonant, different vowel; es speakers often swap the two names wholesale." }
+      ]
+    },
+    {
+      "seq": 4,
+      "type": "matching",
+      "prompt": "[L1: Match the first letter to the word.]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "H", "right": "hello" },
+        { "left": "B", "right": "bye" },
+        { "left": "N", "right": "name" },
+        { "left": "W", "right": "word" }
+      ],
+      "rationale": "Letter-to-word decoding using only known vocabulary; H and W have long, opaque English names that never resemble their sounds, so they need an early explicit anchor."
+    },
+    {
+      "seq": 5,
+      "type": "ordering",
+      "prompt": "[audio] 'name' — [L1: Put the letters in order to spell the word you hear.]",
+      "tokens": ["A", "M", "N", "E"],
+      "key": "N A M E",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 50,
+      "rationale": "First composition task: from spoken word to letter sequence. 'name' is the word the learner will spell about themselves for the rest of the course."
+    },
+    {
+      "seq": 6,
+      "type": "cloze",
+      "prompt": "A: How do you spell 'word'?  B: W, O, R, ___.",
+      "keys": ["D"],
+      "distractor_bank": ["T", "B"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Embeds spelling inside the real exchange it will occur in; final-position D/T discriminates the devoicing that es and vi ears apply to English final consonants."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio] 'H-E-L-L-O' — [L1: Which word is spelled?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Whole-word decoding from a spelled sequence — the skill needed when someone spells a name on the phone; the double L must actually be counted.",
+      "options": [
+        { "label": "hello", "is_correct": true, "rationale": "Five letters, with the double L heard as 'L-L'." },
+        { "label": "hi", "is_correct": false, "rationale": "Same meaning, wrong form — catches learners who guess from context instead of decoding the letters." }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "speaking",
+      "prompt": "[L1: Say your name, then spell it aloud, letter by letter.]",
+      "expected_pattern": "{learner_name}. {letter_sequence}",
+      "asr_focus": ["each letter name intelligible as a discrete unit", "E vs I and G vs J names not swapped", "vowel-letter names use English values, not L1 values"],
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 60,
+      "rationale": "The survival act this lesson exists for (band P4: forms, phones); personalized production with ASR checking exactly the letter-name confusions trained in ex 2-3."
+    }
+  ]
+}

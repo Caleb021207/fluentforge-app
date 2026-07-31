@@ -1,0 +1,133 @@
+{
+  "id": "EN-U01-L01",
+  "title": "Hello and Goodbye",
+  "skill_type": "vocab",
+  "position": 1,
+  "objective": "Greet and take leave with the right formula for the time of day and register (hi/hello/good morning/bye/see you).",
+  "est_minutes": 11,
+  "intro_md": "[L1: In this lesson you learn to say hello and goodbye in English. Some greetings change with the time of day, and some are only for friends. Careful: 'Good night' is for leaving, not for arriving.]\n{{l1_contrast:greetings_pragmatics}}",
+  "status": "draft",
+  "prerequisites": [],
+  "vocabulary_refs": [],
+  "notes": "TODO_audio: exercises 2 and 7 carry the spoken line as written transcript in the prompt ('...' after [audio]); audio assets not yet produced. Register framing: 'best choice' items (ex 5) score the register-appropriate option, they do not mark 'Hi' as ungrammatical.",
+  "new_vocabulary": [
+    { "lemma": "hello", "pos": "interjection", "cefr_level": "A1", "example_sentence": "Hello! Nice day!", "ipa": "/həˈloʊ/", "translations": { "es": "hola" } },
+    { "lemma": "hi", "pos": "interjection", "cefr_level": "A1", "example_sentence": "Hi! Good morning!", "ipa": "/haɪ/", "translations": { "es": "hola (informal)" } },
+    { "lemma": "good morning", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Good morning! Hello!", "ipa": "/ˌɡʊd ˈmɔːrnɪŋ/", "translations": { "es": "buenos días" } },
+    { "lemma": "good evening", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Good evening! Hello!", "ipa": "/ˌɡʊd ˈiːvnɪŋ/", "translations": { "es": "buenas noches (al llegar, para saludar)" } },
+    { "lemma": "good night", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Good night! See you!", "ipa": "/ˌɡʊd ˈnaɪt/", "translations": { "es": "buenas noches (al irse, para despedirse)" } },
+    { "lemma": "goodbye", "pos": "interjection", "cefr_level": "A1", "example_sentence": "Goodbye! See you later!", "ipa": "/ˌɡʊdˈbaɪ/", "translations": { "es": "adiós" } },
+    { "lemma": "bye", "pos": "interjection", "cefr_level": "A1", "example_sentence": "Bye! See you!", "ipa": "/baɪ/", "translations": { "es": "adiós (informal), chao" } },
+    { "lemma": "See you later.", "pos": "chunk", "cefr_level": "A1", "example_sentence": "Bye! See you later!", "ipa": "/ˌsiː juː ˈleɪtər/", "translations": { "es": "Hasta luego." } }
+  ],
+  "exercises": [
+    {
+      "seq": 1,
+      "type": "flashcard",
+      "prompt": "hello · hi · good morning · good evening · good night · goodbye · bye · See you later.",
+      "difficulty": 0.1,
+      "receptive_productive": "receptive_to_productive",
+      "timing_s": 160,
+      "rationale": "Establish form-meaning link with audio for all eight greeting/leave-taking items before any production."
+    },
+    {
+      "seq": 2,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Good night!' — [L1: Is the person arriving or leaving?]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "The single highest-value pragmatic contrast of the lesson: English 'good night' is only a farewell, while es 'buenas noches' is both greeting and farewell.",
+      "options": [
+        { "label": "[L1: Leaving — it is a farewell.]", "is_correct": true, "rationale": "'Good night' is said only when leaving or going to bed." },
+        { "label": "[L1: Arriving — it is a greeting.]", "is_correct": false, "rationale": "Direct es transfer: 'buenas noches' greets AND takes leave; English splits this into 'good evening' (greet) vs 'good night' (leave)." }
+      ]
+    },
+    {
+      "seq": 3,
+      "type": "matching",
+      "prompt": "[L1: Match each expression to when you use it.]",
+      "difficulty": 0.2,
+      "receptive_productive": "receptive",
+      "timing_s": 60,
+      "pairs": [
+        { "left": "Good morning!", "right": "[L1: greeting — in the morning]" },
+        { "left": "Good evening!", "right": "[L1: greeting — at night, when you arrive]" },
+        { "left": "Good night!", "right": "[L1: farewell — before bed or when you leave at night]" },
+        { "left": "Hi!", "right": "[L1: informal greeting — any time, with friends]" }
+      ],
+      "rationale": "Maps each formula to time-of-day AND function (greet vs leave) in one pass; isolates the evening/night split introduced in ex 2."
+    },
+    {
+      "seq": 4,
+      "type": "cloze",
+      "prompt": "[L1: It is 8:00 in the morning. You arrive and greet:] Good ___!",
+      "keys": ["morning"],
+      "distractor_bank": ["night", "evening", "bye"],
+      "difficulty": 0.3,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "First productive selection of the time-bound greeting; 'night' catches the buenas-noches transfer again in production, 'bye' catches greet/leave confusion."
+    },
+    {
+      "seq": 5,
+      "type": "listening_mc",
+      "prompt": "[L1: You meet your new teacher for the first time. Which greeting is the best choice?]",
+      "difficulty": 0.3,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Register discrimination (band: hi/hello and bye/goodbye are register pairs); learners from small-register-distance greeting cultures often default to the informal form everywhere.",
+      "options": [
+        { "label": "Hello!", "is_correct": true, "rationale": "Neutral and safe with a teacher or any new person." },
+        { "label": "Hi!", "is_correct": false, "rationale": "Not wrong, but informal — best kept for friends; the item trains noticing the register pair." },
+        { "label": "Bye!", "is_correct": false, "rationale": "A farewell, not a greeting — catches learners matching sound (short, friendly) instead of function." }
+      ]
+    },
+    {
+      "seq": 6,
+      "type": "ordering",
+      "prompt": "[L1: Put the words in order.]",
+      "tokens": ["later", "you", "see", "!"],
+      "key": "See you later!",
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 45,
+      "rationale": "Assembles the three-word leave-taking chunk; fixed-formula word order must become automatic before it appears inside dialogues."
+    },
+    {
+      "seq": 7,
+      "type": "listening_mc",
+      "prompt": "[audio] 'Goodbye!' — [L1: What did you hear?]",
+      "difficulty": 0.4,
+      "receptive_productive": "receptive",
+      "timing_s": 40,
+      "rationale": "Fine phonetic discrimination inside the taught set: all three options share sounds with the target, so the learner must hear the whole word, not the first syllable.",
+      "options": [
+        { "label": "Goodbye!", "is_correct": true, "rationale": "Two syllables, starts with 'good-' and ends in '-bye'." },
+        { "label": "Good night!", "is_correct": false, "rationale": "Also starts with 'good-'; catches learners who stop listening after the first syllable." },
+        { "label": "Bye!", "is_correct": false, "rationale": "The short register pair of the same word; forces hearing the 'good-' syllable." }
+      ]
+    },
+    {
+      "seq": 8,
+      "type": "cloze",
+      "prompt": "A: Bye! See you ___!  B: See you!",
+      "keys": ["later"],
+      "distractor_bank": ["night", "morning"],
+      "difficulty": 0.4,
+      "receptive_productive": "productive",
+      "timing_s": 40,
+      "rationale": "Productive completion of the chunk in a two-turn exchange; the distractors are real words that produce unidiomatic forms ('see you night'), training chunk integrity."
+    },
+    {
+      "seq": 9,
+      "type": "dialogue",
+      "prompt": "[L1: It is morning. Greet your classmate, then say goodbye two ways: one neutral, one informal.]",
+      "difficulty": 0.5,
+      "receptive_productive": "productive",
+      "timing_s": 90,
+      "rationale": "Integrates time-of-day choice plus the register pairs in real time; counts toward guided-interaction minutes.",
+      "ai_interaction_ref": "EN-U01-L01-DLG"
+    }
+  ]
+}
