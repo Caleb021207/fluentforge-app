@@ -1,0 +1,1310 @@
+{
+  "schema_version": "authoring-v0.1",
+  "unit": "EN-U01",
+  "unit_manifest_errors": [],
+  "unit_pass": false,
+  "lessons": [
+    {
+      "file": "EN-U01-L01.json",
+      "id": "EN-U01-L01",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 8 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 8,
+          "items_covered": 8
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L02.json",
+      "id": "EN-U01-L02",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "8 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 4 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 4,
+          "items_covered": 4
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L03.json",
+      "id": "EN-U01-L03",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana, Sara, Tom"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 6 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 6,
+          "items_covered": 6
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L04.json",
+      "id": "EN-U01-L04",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            1,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 21 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 21,
+          "items_covered": 21
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L05.json",
+      "id": "EN-U01-L05",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 9 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 9,
+          "items_covered": 9
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L06.json",
+      "id": "EN-U01-L06",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 8 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 8,
+          "items_covered": 8
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L07.json",
+      "id": "EN-U01-L07",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 4 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 4,
+          "items_covered": 4
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L08.json",
+      "id": "EN-U01-L08",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L09.json",
+      "id": "EN-U01-L09",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L10.json",
+      "id": "EN-U01-L10",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana, Omar, Sara"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L11.json",
+      "id": "EN-U01-L11",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 12 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 12,
+          "items_covered": 12
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L12.json",
+      "id": "EN-U01-L12",
+      "pass": false,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": false,
+          "detail": "2 out-of-boundary word(s): \"sara\"@ex2, \"com\"@ex2",
+          "violations": [
+            {
+              "exercise": 2,
+              "type": "matching",
+              "word": "sara"
+            },
+            {
+              "exercise": 2,
+              "type": "matching",
+              "word": "com"
+            }
+          ],
+          "warnings": [
+            "assumed proper nouns (exempt): Diaz, Sara"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 6 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 6,
+          "items_covered": 6
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L13.json",
+      "id": "EN-U01-L13",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 10 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 10,
+          "items_covered": 10
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L14.json",
+      "id": "EN-U01-L14",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            9
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Omar"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "10 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 10 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 10,
+          "items_covered": 10
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L15.json",
+      "id": "EN-U01-L15",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Maria"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 8 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 8,
+          "items_covered": 8
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L16.json",
+      "id": "EN-U01-L16",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            6,
+            7
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": []
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L17.json",
+      "id": "EN-U01-L17",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            7,
+            8
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Ana, Dan, Eva, Leo, Nina, Omar, Sara, Vancouver"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "9 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    },
+    {
+      "file": "EN-U01-L18.json",
+      "id": "EN-U01-L18",
+      "pass": true,
+      "gates": {
+        "G-schema": {
+          "pass": true,
+          "detail": "conforms to authoring-v0.1",
+          "errors": []
+        },
+        "G-schema-strict": {
+          "pass": true,
+          "detail": "all exercise types are DB-CHECK-valid",
+          "errors": []
+        },
+        "G-keys": {
+          "pass": true,
+          "detail": "all answer keys structurally sound",
+          "errors": [],
+          "warnings": []
+        },
+        "G-key-coverage": {
+          "pass": true,
+          "detail": "every gradable item exposes >=1 accepted key / correct option",
+          "errors": [],
+          "exempt_exercises": [
+            0,
+            8,
+            9,
+            10
+          ]
+        },
+        "G-vocab-boundary": {
+          "pass": true,
+          "detail": "all content words inside cumulative taught set",
+          "violations": [],
+          "warnings": [
+            "assumed proper nouns (exempt): Dana, Lee, Sam"
+          ]
+        },
+        "G-counts": {
+          "pass": true,
+          "detail": "11 exercises in range",
+          "errors": [],
+          "warnings": []
+        },
+        "G-difficulty": {
+          "pass": true,
+          "detail": "difficulties in range, warm-up ramp ok",
+          "errors": []
+        },
+        "G-l10n": {
+          "pass": true,
+          "detail": "all 0 new_vocabulary item(s) translated for [es]",
+          "missing": [],
+          "locales": [
+            "es"
+          ],
+          "items_total": 0,
+          "items_covered": 0
+        },
+        "G-a11y": {
+          "pass": true,
+          "detail": "every audio item is answerable without audio",
+          "errors": [],
+          "warnings": [],
+          "audio_deferred": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "lessons_total": 18,
+    "lessons_passed": 17,
+    "pass_rate": 0.944,
+    "total_new_vocabulary": 106,
+    "vocab_budget": 110,
+    "gates": {
+      "G-schema": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-schema-strict": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-keys": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-key-coverage": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-vocab-boundary": {
+        "passed": 17,
+        "failed": 1
+      },
+      "G-counts": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-difficulty": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-l10n": {
+        "passed": 18,
+        "failed": 0
+      },
+      "G-a11y": {
+        "passed": 18,
+        "failed": 0
+      }
+    },
+    "gate_declaration": {
+      "deterministic": [
+        "G-schema",
+        "G-schema-strict",
+        "G-keys",
+        "G-key-coverage",
+        "G-vocab-boundary",
+        "G-counts",
+        "G-difficulty",
+        "G-l10n",
+        "G-a11y"
+      ],
+      "declared": {
+        "G-audio": "audio round-trip: TTS render -> STT -> normalized match >=0.9 + asset transcript present. Needs the doc-11 voice pipeline. [requires validation]",
+        "G-phoneme": "phoneme-distance: minimal pairs differ by exactly one phoneme via a pronouncing dictionary. Deterministic in principle but has no runnable items (schema v0.1 has no minimal_pair primitive) and no bundled dictionary (no new deps). [requires validation]",
+        "G-rubric-stability": "Tier-2 judge ranks 6 seeded answers (2 good/2 borderline/2 bad) monotonically, 3x, variance-banded. Needs model access. [requires validation]",
+        "solver": "contentGauntlet.ts: blind LLM solver must reach the keyed answer. [requires validation]",
+        "pedagogy": "contentGauntlet.ts: rubric /20 judge. [requires validation]",
+        "bias": "contentGauntlet.ts: cultural-sensitivity screen. [requires validation]",
+        "level": "contentGauntlet.ts: CEFR classifier vs target band. [requires validation]",
+        "duplicate": "contentGauntlet.ts: embedding cosine <0.92; needs DB/embeddings. [requires validation]"
+      }
+    }
+  }
+}

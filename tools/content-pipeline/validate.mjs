@@ -7,18 +7,35 @@
  * DETERMINISTIC subset of the content gauntlet locally:
  *
  *   G-schema          shape (hand-rolled JSON Schema subset interpreter, no deps)
+ *   G-schema-strict   every exercise.type is in the DB CHECK list, pinned here
+ *                     independently of the authoring-schema enum (drift backstop)
  *   G-keys            per-type answer-key integrity (exactly one correct option
  *                     + rationale on it; tokens for ordering; pairs for matching;
  *                     keys for cloze; exercise-level rationale everywhere)
+ *   G-key-coverage    coverage axis (complements G-keys' structural axis): every
+ *                     machine-gradable item exposes >=1 accepted key / correct
+ *                     option so it is answerable at all. Net-new catch vs G-keys:
+ *                     translation items (which G-keys does not inspect)
  *   G-vocab-boundary  every content word in learner-visible text must be in the
  *                     unit's cumulative allowed-lemma set (new_vocabulary of
  *                     this + prior lessons + the function-word allowlist below)
  *   G-counts          6-14 exercises per lesson; unit vocab within budget
  *   G-difficulty      difficulty in [0,1]; first exercise <= last (warm-up ramp)
+ *   G-l10n            l10n-completeness (slice policy): every new_vocabulary item
+ *                     has a non-blank translation for each enabled L1 (es)
+ *   G-a11y            every audio-bearing item (listening_mc/dictation/speaking or
+ *                     any [audio ...] prompt) carries a written stand-in so it is
+ *                     answerable without audio; a TODO_audio note is the accepted
+ *                     0.7 fallback when the text cannot live inline
  *
- * The AI-judged gates in supabase/functions/_shared/contentGauntlet.ts
- * (solver, pedagogy judge, bias screen, level classifier) are NOT run here —
- * they require model calls and are [requires validation] for this slice.
+ * The AI-/pipeline-judged gates are DECLARED but NOT run here (they need model or
+ * voice-pipeline access and are [requires validation] for this slice): the seven
+ * plan-06 §9 gates that are non-deterministic — G-audio (audio round-trip),
+ * G-phoneme (phoneme-distance; deterministic in principle but needs a pronouncing
+ * dictionary + a minimal_pair primitive that schema v0.1 lacks) and
+ * G-rubric-stability — plus the existing contentGauntlet.ts gates (solver,
+ * pedagogy, bias, level classifier, duplicate). The runner emits the full gate
+ * matrix under summary.gate_declaration; see tools/content-pipeline/README.md.
  *
  * Usage: node tools/content-pipeline/validate.mjs <unit-dir> [--out report.json]
  * Exit codes: 0 all lessons pass · 1 failures · 2 usage/IO error.
@@ -235,6 +252,25 @@ export function learnerVisibleText(ex) {
 
 const CHOICE_TYPES = new Set(["listening_mc"]);
 
+/**
+ * Canonical exercise types, pinned to the public.exercises.type CHECK constraint
+ * (supabase/migrations/20260729164446_*.sql). G-schema-strict fails any type not
+ * in this set. It is deliberately a SEPARATE source of truth from the authoring
+ * schema's `type` enum: if the schema enum is ever loosened, a value the DB would
+ * reject at INSERT time is still caught here before it reaches seed generation.
+ * tests/server-pure/contentPipeline.test.ts pins this set to the migration text.
+ */
+export const DB_EXERCISE_TYPES = new Set([
+  "flashcard", "cloze", "matching", "ordering", "dictation",
+  "listening_mc", "speaking", "translation", "dialogue",
+]);
+
+/** Types graded without a static accept-list (reveal / ASR / AI) — G-key-coverage exempts them. */
+const KEY_EXEMPT_TYPES = new Set(["flashcard", "speaking", "dialogue"]);
+
+/** Enabled L1 locales for the slice (doc 13 registry is future work). */
+export const ENABLED_L1_LOCALES = ["es"];
+
 export function gateKeys(lesson) {
   const errors = [];
   const warnings = [];
@@ -339,6 +375,170 @@ export function gateDifficulty(lesson) {
   return gate(errors.length === 0, errors.length ? errors.join("; ") : "difficulties in range, warm-up ramp ok", { errors });
 }
 
+/**
+ * G-schema-strict — every exercise.type is one the DB CHECK will accept. Runs as
+ * a backstop independent of the authoring-schema enum (see DB_EXERCISE_TYPES).
+ */
+export function gateSchemaStrict(lesson) {
+  const errors = [];
+  (lesson.exercises ?? []).forEach((ex, i) => {
+    if (!DB_EXERCISE_TYPES.has(ex.type)) {
+      errors.push(`exercise[${i}]: type ${JSON.stringify(ex.type)} not in DB CHECK list [${[...DB_EXERCISE_TYPES].join(", ")}]`);
+    }
+  });
+  return gate(errors.length === 0, errors.length ? errors.join("; ") : "all exercise types are DB-CHECK-valid", { errors });
+}
+
+/**
+ * G-key-coverage — the COVERAGE axis (G-keys owns the structural axis: exactly-one
+ * correct, rationale, token re-assembly, blank/key parity). This gate asks only
+ * "is the answer space covered so the item is gradable at all?": choice items need
+ * >=1 correct option; constructed items (cloze/ordering/dictation/translation) and
+ * matching need >=1 accepted key/pair. Its net-new catch over G-keys is the
+ * translation type, which G-keys never inspects — an under-specified translation
+ * accept-list (plan 06 R2) would otherwise ship silently. Reveal/ASR/AI-graded
+ * types (flashcard/speaking/dialogue) are declared exempt, not silently skipped.
+ */
+export function gateKeyCoverage(lesson) {
+  const errors = [];
+  const exempt = [];
+  (lesson.exercises ?? []).forEach((ex, i) => {
+    const at = `exercise[${i}] (${ex.type})`;
+    if (KEY_EXEMPT_TYPES.has(ex.type)) { exempt.push(i); return; }
+    const hasKeyString = typeof ex.key === "string" && ex.key.trim().length > 0;
+    const hasKeyList = Array.isArray(ex.keys) && ex.keys.length >= 1;
+    switch (ex.type) {
+      case "listening_mc": {
+        const correct = (ex.options ?? []).filter((o) => o.is_correct === true).length;
+        if (correct < 1) errors.push(`${at}: 0 correct options — answer space uncovered, choice item ungradable`);
+        break;
+      }
+      case "matching":
+        if (!(ex.pairs?.length >= 1)) errors.push(`${at}: no pairs — matching key uncovered`);
+        break;
+      case "cloze":
+        if (!hasKeyList) errors.push(`${at}: no accepted answer key (keys[] empty) — cloze ungradable`);
+        break;
+      case "translation":
+        if (!hasKeyString && !hasKeyList) errors.push(`${at}: no accepted answer key (key/keys) — translation ungradable`);
+        break;
+      case "ordering":
+      case "dictation":
+        if (!hasKeyString) errors.push(`${at}: no accepted answer key (key) — ${ex.type} ungradable`);
+        break;
+      default:
+        break; // unknown/other types are G-schema-strict's job, not coverage's
+    }
+  });
+  return gate(
+    errors.length === 0,
+    errors.length ? errors.join("; ") : "every gradable item exposes >=1 accepted key / correct option",
+    { errors, exempt_exercises: exempt },
+  );
+}
+
+/**
+ * G-l10n — l10n-completeness for the slice's enabled L1s. Slice policy (task 2.4):
+ * every new_vocabulary item carries a non-blank translation for each enabled
+ * locale (es today). Stronger than the schema's `required: ["es"]` + minLength 1,
+ * which a single whitespace char would satisfy; here the value is trimmed. The
+ * full plan-06 §9 G-l10n (instruction keys + every l1_dependent_field across every
+ * enabled locale) is broader and lands with the doc-13 locale registry.
+ */
+export function gateL10n(lesson, enabledLocales = ENABLED_L1_LOCALES) {
+  const items = lesson.new_vocabulary ?? [];
+  const missing = [];
+  items.forEach((v, i) => {
+    for (const loc of enabledLocales) {
+      const t = v?.translations?.[loc];
+      if (typeof t !== "string" || t.trim().length === 0) missing.push({ index: i, lemma: v?.lemma ?? null, locale: loc });
+    }
+  });
+  const missingIdx = new Set(missing.map((m) => m.index));
+  return gate(
+    missing.length === 0,
+    missing.length
+      ? `${missing.length} missing/blank L1 translation(s): ${missing.map((m) => `"${m.lemma}"(${m.locale})`).join(", ")}`
+      : `all ${items.length} new_vocabulary item(s) translated for [${enabledLocales.join(", ")}]`,
+    { missing, locales: enabledLocales, items_total: items.length, items_covered: items.length - missingIdx.size },
+  );
+}
+
+/**
+ * True when a learner-readable character survives [..] / {..} stripping. Uses a raw
+ * alnum test (not tokenizeWithCase, which drops 1-char tokens) so a spelled/letter
+ * transcript like 'E' or 'H-E-L-L-O' correctly counts as a written stand-in.
+ */
+function hasReadableStandIn(text) {
+  return /[A-Za-z0-9]/.test(stripNonLearnerText(text ?? ""));
+}
+
+/** Whether a TODO_audio note documents the audio need for a given exercise seq. */
+export function todoAudioCoversSeq(notes, seq) {
+  const n = String(notes ?? "");
+  if (!/TODO_audio/i.test(n)) return false;
+  if (/every exercise/i.test(n)) return true;
+  if (seq == null) return false;
+  // "ex5" / "ex 5" / "exercise 5" / "exercises 5" (glued or spaced single reference)
+  if (new RegExp(`\\bex(?:ercise)?s?\\s*${seq}\\b`, "i").test(n)) return true;
+  // "exercises 2, 3, 5, 7" (enumerated list, up to the sentence end)
+  return new RegExp(`\\bexercises?\\b[^.]*?\\b${seq}\\b`, "i").test(n);
+}
+
+/**
+ * G-a11y — every item that presents audio is answerable without hearing it. An
+ * item is audio-bearing when its prompt carries an [audio ...] marker (the authored
+ * signal that a recording plays); a listening/speaking item with no marker presents
+ * no stimulus audio and is answerable from its readable prompt/options by construction.
+ * It passes when a written stand-in exists inline — a readable char left in the prompt
+ * after stage directions are stripped (the quoted transcript, per the 0.7 convention)
+ * or in a readable expected_pattern. When no inline stand-in exists, a TODO_audio note
+ * that names the exercise is the accepted 0.7 fallback (asset pending) and downgrades
+ * the miss to a warning; an audio item with neither is a hard fail. (Plan-06 §9
+ * image-alt-text is N/A: the v0.1 schema has no image field — see README.)
+ */
+export function gateA11y(lesson) {
+  const errors = [];
+  const deferred = [];
+  const notes = lesson.notes;
+  (lesson.exercises ?? []).forEach((ex, i) => {
+    const isAudio = /\[audio/i.test(String(ex.prompt ?? ""));
+    if (!isAudio) return;
+    const standIn = hasReadableStandIn(ex.prompt) ||
+      (typeof ex.expected_pattern === "string" && hasReadableStandIn(ex.expected_pattern));
+    if (standIn) return;
+    if (todoAudioCoversSeq(notes, ex.seq ?? i + 1)) { deferred.push(i); return; }
+    errors.push(`exercise[${i}] (${ex.type}): audio item has no written stand-in (no readable prompt/pattern text) and no TODO_audio note — unanswerable without audio`);
+  });
+  const warnings = deferred.length
+    ? [`${deferred.length} audio item(s) rely on a TODO_audio note for their stand-in (assets not yet produced): ex ${deferred.map((i) => i + 1).join(", ")}`]
+    : [];
+  return gate(errors.length === 0, errors.length ? errors.join("; ") : "every audio item is answerable without audio", { errors, warnings, audio_deferred: deferred });
+}
+
+/* ------------------------------------------------------- gate declaration */
+/**
+ * The full gate matrix (plan 06 §9 / E7). `deterministic` gates run in this file;
+ * `declared` gates are DECLARED here but need model / voice-pipeline / DB access
+ * and carry state [requires validation] until staging exists (see README).
+ */
+export const GATE_DECLARATION = {
+  deterministic: [
+    "G-schema", "G-schema-strict", "G-keys", "G-key-coverage",
+    "G-vocab-boundary", "G-counts", "G-difficulty", "G-l10n", "G-a11y",
+  ],
+  declared: {
+    "G-audio": "audio round-trip: TTS render -> STT -> normalized match >=0.9 + asset transcript present. Needs the doc-11 voice pipeline. [requires validation]",
+    "G-phoneme": "phoneme-distance: minimal pairs differ by exactly one phoneme via a pronouncing dictionary. Deterministic in principle but has no runnable items (schema v0.1 has no minimal_pair primitive) and no bundled dictionary (no new deps). [requires validation]",
+    "G-rubric-stability": "Tier-2 judge ranks 6 seeded answers (2 good/2 borderline/2 bad) monotonically, 3x, variance-banded. Needs model access. [requires validation]",
+    "solver": "contentGauntlet.ts: blind LLM solver must reach the keyed answer. [requires validation]",
+    "pedagogy": "contentGauntlet.ts: rubric /20 judge. [requires validation]",
+    "bias": "contentGauntlet.ts: cultural-sensitivity screen. [requires validation]",
+    "level": "contentGauntlet.ts: CEFR classifier vs target band. [requires validation]",
+    "duplicate": "contentGauntlet.ts: embedding cosine <0.92; needs DB/embeddings. [requires validation]",
+  },
+};
+
 /* -------------------------------------------------------------- unit runner */
 
 export function validateUnit(manifest, lessonsByFile) {
@@ -371,6 +571,8 @@ export function validateUnit(manifest, lessonsByFile) {
     }
     const gates = {
       "G-schema": gate(schemaErrors.length === 0, schemaErrors.length ? schemaErrors.join("; ") : "conforms to authoring-v0.1", { errors: schemaErrors }),
+      // Runs even when G-schema fails: a true drift backstop against the DB CHECK.
+      "G-schema-strict": gateSchemaStrict(lesson),
     };
     if (schemaErrors.length === 0) {
       // current lesson's own new vocabulary is allowed within the lesson
@@ -386,9 +588,12 @@ export function validateUnit(manifest, lessonsByFile) {
         totalVocab += 1;
       }
       gates["G-keys"] = gateKeys(lesson);
+      gates["G-key-coverage"] = gateKeyCoverage(lesson);
       gates["G-vocab-boundary"] = gateVocabBoundary(lesson, allowedLemmas);
       gates["G-counts"] = gateCounts(lesson);
       gates["G-difficulty"] = gateDifficulty(lesson);
+      gates["G-l10n"] = gateL10n(lesson);
+      gates["G-a11y"] = gateA11y(lesson);
     }
     lessons.push({
       file,
@@ -423,7 +628,7 @@ export function validateUnit(manifest, lessonsByFile) {
       total_new_vocabulary: totalVocab,
       vocab_budget: manifest.vocab_budget ?? null,
       gates: gateStats,
-      ai_judged_gates: "solver/pedagogy/bias/level-classifier NOT run here — requires validation via contentGauntlet.ts",
+      gate_declaration: GATE_DECLARATION,
     },
   };
 }

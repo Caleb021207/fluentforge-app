@@ -1,12 +1,22 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  DB_EXERCISE_TYPES,
+  ENABLED_L1_LOCALES,
   FUNCTION_WORDS,
+  GATE_DECLARATION,
+  gateA11y,
+  gateKeyCoverage,
   gateKeys,
+  gateL10n,
+  gateSchemaStrict,
   gateVocabBoundary,
   lemmaCandidates,
   loadLessonSchema,
   loadUnitSchema,
   stripNonLearnerText,
+  todoAudioCoversSeq,
   validateAgainstSchema,
   validateUnit,
 } from "../../tools/content-pipeline/validate.mjs";
@@ -487,5 +497,193 @@ describe("seed-gen: deterministic prepared SQL", () => {
 
   it("refuses to generate from an incomplete unit", () => {
     expect(() => generateSeedSql(MANIFEST, { "EN-U01-L01.json": L01 })).toThrow(/validate/);
+  });
+});
+
+/* ============================================================================
+ * Workstream 2.4 — deterministic subset of the seven new gauntlet gates
+ * (plan 06 §E7/§9). Each new gate gets pass + fail vectors; the AI-judged gates
+ * are asserted DECLARED (not run). Fixtures below are minimal partial lessons —
+ * the gate functions read only the fields they check.
+ * ========================================================================== */
+
+describe("G-schema-strict: exercise types pinned to the DB CHECK list", () => {
+  it("accepts every type the exemplars use", () => {
+    expect(gateSchemaStrict(L05).pass).toBe(true);
+    expect(gateSchemaStrict(L01).pass).toBe(true);
+  });
+
+  it("rejects a type the DB CHECK would reject, independent of the schema enum", () => {
+    // "reorder" is a legacy type from migration 20251021193032, not in the v0.1 CHECK.
+    const g = gateSchemaStrict({ exercises: [{ type: "reorder" }, { type: "cloze" }] });
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain("reorder");
+    expect(g.detail).toContain("DB CHECK");
+  });
+
+  it("DB_EXERCISE_TYPES matches the public.exercises.type CHECK in the migration verbatim", () => {
+    const sql = readFileSync(
+      fileURLToPath(
+        new URL("../../supabase/migrations/20260729164446_d991e39d-a8ff-4253-925c-e2cf9822538f.sql", import.meta.url),
+      ),
+      "utf8",
+    );
+    // Target the exercises CHECK specifically (it is the one listing 'flashcard').
+    const m = sql.match(/CHECK \(type IN \(([^)]*'flashcard'[^)]*)\)\)/);
+    expect(m, "exercises.type CHECK not found in migration").toBeTruthy();
+    const fromMigration = (m![1].match(/'([a-z_]+)'/g) ?? []).map((s) => s.replace(/'/g, ""));
+    expect(fromMigration).toHaveLength(9);
+    expect(new Set(fromMigration)).toEqual(DB_EXERCISE_TYPES);
+  });
+});
+
+describe("G-key-coverage: every gradable item exposes an accepted key / correct option", () => {
+  it("passes the exemplar and declares the reveal/ASR/AI-graded exemptions", () => {
+    const g = gateKeyCoverage(L05);
+    expect(g.pass).toBe(true);
+    expect(g.exempt_exercises).toEqual([0, 7, 8]); // flashcard, speaking, dialogue
+  });
+
+  it("catches an under-specified translation accept-list — the net-new catch vs G-keys", () => {
+    const ex = {
+      type: "translation",
+      prompt: "[L1: Say it in English: 'Somos estudiantes.']",
+      difficulty: 0.5,
+      receptive_productive: "productive",
+      rationale: "Forces the learner to supply the dropped subject pronoun we.",
+    };
+    // G-keys never inspects translation, so a keyless translation passes it silently…
+    expect(gateKeys({ exercises: [ex] }).pass).toBe(true);
+    // …but G-key-coverage flags the missing accept-list.
+    const g = gateKeyCoverage({ exercises: [ex] });
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain("translation ungradable");
+  });
+
+  it("accepts a translation once it carries a key", () => {
+    const ex = { type: "translation", key: "We are students.", prompt: "p", difficulty: 0.5, receptive_productive: "productive" };
+    expect(gateKeyCoverage({ exercises: [ex] }).pass).toBe(true);
+  });
+
+  it("fails a cloze whose accept-list is empty", () => {
+    const g = gateKeyCoverage({ exercises: [{ type: "cloze", keys: [] }] });
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain("cloze ungradable");
+  });
+
+  it("fails a choice item with no correct option (uncovered answer space)", () => {
+    const g = gateKeyCoverage({
+      exercises: [{ type: "listening_mc", options: [{ label: "a", is_correct: false }, { label: "b", is_correct: false }] }],
+    });
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain("uncovered");
+  });
+});
+
+describe("G-l10n: L1 (es) translation completeness on new_vocabulary", () => {
+  it("passes the exemplar and reports full coverage for the enabled locale", () => {
+    const g = gateL10n(L05);
+    expect(g.pass).toBe(true);
+    expect(g.items_covered).toBe(g.items_total);
+    expect(g.locales).toEqual(ENABLED_L1_LOCALES);
+  });
+
+  it("passes trivially when the lesson introduces no vocabulary", () => {
+    expect(gateL10n({ new_vocabulary: [] }).pass).toBe(true);
+  });
+
+  it("flags a whitespace-only es translation that the schema minLength would accept", () => {
+    const bad = clone(L05);
+    (bad.new_vocabulary[0].translations as { es?: string }).es = "  ";
+    expect(validateAgainstSchema(loadLessonSchema(), bad)).toEqual([]); // schema: len>=1 passes
+    const g = gateL10n(bad); // …but G-l10n trims and flags it
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain(bad.new_vocabulary[0].lemma);
+  });
+
+  it("flags a missing es translation", () => {
+    const bad = clone(L05);
+    delete (bad.new_vocabulary[1].translations as { es?: string }).es;
+    expect(gateL10n(bad).pass).toBe(false);
+  });
+});
+
+describe("G-a11y: audio items are answerable without hearing them", () => {
+  it("passes the exemplar with every audio item carrying an inline transcript (no deferrals)", () => {
+    const g = gateA11y(L05);
+    expect(g.pass).toBe(true);
+    expect(g.audio_deferred).toEqual([]);
+  });
+
+  it("counts a single-letter spelled transcript as a written stand-in (tokenizer blind-spot fix)", () => {
+    const g = gateA11y({
+      exercises: [{ seq: 1, type: "listening_mc", prompt: "[audio] 'E' — [L1: Which letter do you hear?]", options: [{ label: "E", is_correct: true }] }],
+    });
+    expect(g.pass).toBe(true);
+    expect(g.audio_deferred).toEqual([]);
+  });
+
+  it("does not scan a listening item that presents no audio (register choice)", () => {
+    const g = gateA11y({
+      exercises: [{ seq: 1, type: "listening_mc", prompt: "[L1: Which greeting is the best choice?]", options: [{ label: "Hello", is_correct: true }] }],
+    });
+    expect(g.pass).toBe(true);
+    expect(g.audio_deferred).toEqual([]);
+  });
+
+  it("fails an audio item with no transcript and no TODO_audio note", () => {
+    const g = gateA11y({
+      notes: "",
+      exercises: [{ seq: 1, type: "listening_mc", prompt: "[audio] — [L1: What did you hear?]", options: [{ label: "a", is_correct: true }] }],
+    });
+    expect(g.pass).toBe(false);
+    expect(g.detail).toContain("without audio");
+  });
+
+  it("accepts the 0.7 TODO_audio fallback but downgrades the miss to a warning", () => {
+    const g = gateA11y({
+      notes: "TODO_audio: ex1 needs a recording.",
+      exercises: [{ seq: 1, type: "listening_mc", prompt: "[audio] — [L1: What did you hear?]", options: [{ label: "a", is_correct: true }] }],
+    });
+    expect(g.pass).toBe(true);
+    expect(g.audio_deferred).toEqual([0]);
+    expect(g.warnings.join(" ")).toContain("TODO_audio");
+  });
+});
+
+describe("todoAudioCoversSeq: notes -> exercise reference matching", () => {
+  it("matches an enumerated list, glued and spaced single refs, and 'every exercise'", () => {
+    expect(todoAudioCoversSeq("TODO_audio: exercises 2, 3, 5, 7 carry the line.", 7)).toBe(true);
+    expect(todoAudioCoversSeq("TODO_audio: exercises 2, 3, 5, 7 carry the line.", 4)).toBe(false);
+    expect(todoAudioCoversSeq("TODO_audio: ex5 model prompt.", 5)).toBe(true); // glued form
+    expect(todoAudioCoversSeq("TODO_audio: exercise 6 needs audio.", 6)).toBe(true);
+    expect(todoAudioCoversSeq("TODO_audio: every exercise needs audio.", 99)).toBe(true);
+  });
+
+  it("returns false without a TODO_audio marker", () => {
+    expect(todoAudioCoversSeq("just some notes about ex2", 2)).toBe(false);
+  });
+});
+
+describe("gate declaration: deterministic vs AI-judged matrix (E7)", () => {
+  it("declares all nine deterministic gates and the AI-/pipeline-judged remainder", () => {
+    for (const g of ["G-schema-strict", "G-key-coverage", "G-l10n", "G-a11y"]) {
+      expect(GATE_DECLARATION.deterministic).toContain(g);
+    }
+    expect(GATE_DECLARATION.deterministic).toHaveLength(9);
+    for (const g of ["G-audio", "G-phoneme", "G-rubric-stability", "solver", "pedagogy", "bias", "level", "duplicate"]) {
+      expect(Object.keys(GATE_DECLARATION.declared)).toContain(g);
+    }
+    for (const v of Object.values(GATE_DECLARATION.declared)) {
+      expect(v).toContain("requires validation");
+    }
+  });
+
+  it("the unit report surfaces the declaration and runs every deterministic gate on each lesson", () => {
+    const report = validateUnit(MANIFEST, LESSONS);
+    expect(report.summary.gate_declaration).toEqual(GATE_DECLARATION);
+    for (const lesson of report.lessons) {
+      expect(Object.keys(lesson.gates)).toEqual(expect.arrayContaining(GATE_DECLARATION.deterministic));
+    }
   });
 });
